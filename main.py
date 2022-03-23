@@ -16,15 +16,14 @@ def start_game():
 
 def play_trivial():
     qa = get_questions(1, 1)
-    print(qa['que'])
-    play(qa, root)
+    play(qa, frame_main)
 
 
 # ----------------- main --------------------------
 if __name__ == '__main__':
     # create main form
     root = tk.Tk()
-    root.title('doYouKnow?')
+    root.title(appname)
     window_width = 1024
     window_height = 768
     min_width = 200
@@ -45,7 +44,19 @@ if __name__ == '__main__':
     # root.attributes('-alpha', 0.5)  # transparency
     # root.resizable(False, False)
 
-    title = ttk.Label(root, text=appname, font='Arial 18 bold')#.pack
+    frame_top = tk.Frame(root, bg='grey')
+    frame_top.place(y=40, height=100, width=window_width)
+    frame_top.pack
+
+    frame_main = tk.Frame(root, bg='white')
+    frame_main.place(y=140, height=window_height - 160, width=window_width)
+    frame_main.pack
+
+    frame_bottom = tk.Frame(root, bg='grey')
+    frame_bottom.place(y=708, height=60, width=window_width)
+    frame_bottom.pack
+
+    title = ttk.Label(root, text=appname, font='Arial 18 bold')  # .pack
     title.place(x=20, y=1)
     show_splash_screen(root)
     show_high_scores(root)

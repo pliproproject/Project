@@ -1,7 +1,7 @@
 from tkinter import ttk
 
 
-def play(qa, root):
-    ttk.Label(root, text=qa['que']).pack()
+def play(qa, parent):
+    ttk.Label(parent, text=qa['que']).pack()
     for answer in qa['ans']:
-        ttk.Label(root, text=answer).pack()
+        ttk.Label(parent, text=answer).pack()
