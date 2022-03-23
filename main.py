@@ -9,17 +9,15 @@ appname = "doYouKnow?"
 
 def start_game():
     print("game started")
-    get_name()
-    get_category()
-    get_difficulty()
+    get_name(root)
+    get_category(root)
+    get_difficulty(root)
 
 
 def play_trivial():
     qa = get_questions(1, 1)
     print(qa['que'])
-    ttk.Label(root, text=qa['que']).pack()
-    for answer in qa['ans']:
-        ttk.Label(root, text=answer).pack()
+    play(qa, root)
 
 
 # ----------------- main --------------------------
@@ -46,18 +44,21 @@ if __name__ == '__main__':
     # transparency
     # root.attributes('-alpha', 0.5)  # transparency
     # root.resizable(False, False)
-    ttk.Label(root, text=appname).pack()
 
-    show_splash_screen()
-    show_high_scores()
+    title = ttk.Label(root, text=appname, font='Arial 18 bold')#.pack
+    title.place(x=20, y=1)
+    show_splash_screen(root)
+    show_high_scores(root)
+
+    # start button
+    btn_start = ttk.Button(root, text="Enter name, category, difficulty", command=start_game)
+    btn_start.place(x=20, y=window_height - 50)
+
+    # play button
+    btn_play = ttk.Button(root, text="Start Game", command=play_trivial)
+    btn_play.place(x=200, y=window_height - 50)
 
     # exit button
-    exit_button = ttk.Button(root, text='Exit', command=lambda: root.quit())
-    exit_button.pack(ipadx=5, ipady=10, expand=True)
-
-    demo_button = ttk.Button(root, text="Give name, category, difficulty", command=start_game())
-    demo_button.pack(ipadx=10, ipady=10, expand=True)
-
-    demo_button = ttk.Button(root, text="Start Game", command=play_trivial())
-    demo_button.pack(ipadx=10, ipady=10, expand=True)
+    btn_exit = ttk.Button(root, text='Exit', command=lambda: root.quit())
+    btn_exit.place(x=window_width - 100, y=window_height - 50)
     root.mainloop()
