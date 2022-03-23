@@ -1,12 +1,25 @@
 import tkinter as tk
 from tkinter import ttk
+from get_questions import *
+from high_scores import *
+from play import *
 
 appname = "doYouKnow?"
 
 
-def callback():
-    print('demo')
-    l2.config(text="test")
+def start_game():
+    print("game started")
+    get_name()
+    get_category()
+    get_difficulty()
+
+
+def play_trivial():
+    qa = get_questions(1, 1)
+    print(qa['que'])
+    ttk.Label(root, text=qa['que']).pack()
+    for answer in qa['ans']:
+        ttk.Label(root, text=answer).pack()
 
 
 # ----------------- main --------------------------
@@ -33,14 +46,18 @@ if __name__ == '__main__':
     # transparency
     # root.attributes('-alpha', 0.5)  # transparency
     # root.resizable(False, False)
+    ttk.Label(root, text=appname).pack()
 
-    # l1 = tk.Label(root, text='Classic Label').pack()
-    l2 = ttk.Label(root, text=appname).pack()
+    show_splash_screen()
+    show_high_scores()
+
     # exit button
     exit_button = ttk.Button(root, text='Exit', command=lambda: root.quit())
     exit_button.pack(ipadx=5, ipady=10, expand=True)
 
-    demo_button = ttk.Button(root, text="Demo Button", command=callback)
-    demo_button.pack(ipadx=20, ipady=20, expand=True)
+    demo_button = ttk.Button(root, text="Give name, category, difficulty", command=start_game())
+    demo_button.pack(ipadx=10, ipady=10, expand=True)
 
+    demo_button = ttk.Button(root, text="Start Game", command=play_trivial())
+    demo_button.pack(ipadx=10, ipady=10, expand=True)
     root.mainloop()
