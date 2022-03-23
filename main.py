@@ -56,20 +56,22 @@ if __name__ == '__main__':
     frame_bottom.place(y=708, height=60, width=window_width)
     frame_bottom.pack
 
-    title = ttk.Label(root, text=appname, font='Arial 18 bold')  # .pack
+    title = ttk.Label(root, text=appname, font='Arial 18 bold')
     title.place(x=20, y=1)
-    show_splash_screen(root)
-    show_high_scores(root)
+    # Show splash screen for a couple of seconds or destroy on click
+    show_splash_screen(frame_main)
+    # Show high scores
+    show_high_scores(frame_main)
 
     # start button
-    btn_start = ttk.Button(root, text="Enter name, category, difficulty", command=start_game)
-    btn_start.place(x=20, y=window_height - 50)
+    btn_start = ttk.Button(frame_bottom, text="Enter name, category, difficulty", command=start_game)
+    btn_start.place(x=20, y=20)
 
     # play button
-    btn_play = ttk.Button(root, text="Start Game", command=play_trivial)
-    btn_play.place(x=200, y=window_height - 50)
+    btn_play = ttk.Button(frame_bottom, text="Start Game", command=play_trivial)
+    btn_play.place(x=200, y=20)
 
     # exit button
-    btn_exit = ttk.Button(root, text='Exit', command=lambda: root.quit())
-    btn_exit.place(x=window_width - 100, y=window_height - 50)
+    btn_exit = ttk.Button(frame_bottom, text='Exit', command=lambda: root.quit())
+    btn_exit.place(x=window_width - 100, y=20)
     root.mainloop()
