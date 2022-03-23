@@ -9,9 +9,10 @@ appname = "doYouKnow?"
 
 def start_game():
     print("game started")
-    get_name(root)
-    get_category(root)
-    get_difficulty(root)
+    frame_main.place_forget()
+    get_name(frame_top)
+    get_category(frame_top)
+    get_difficulty(frame_top)
 
 
 def play_trivial():
@@ -45,18 +46,18 @@ if __name__ == '__main__':
     # root.resizable(False, False)
 
     frame_top = tk.Frame(root, bg='grey')
-    frame_top.place(y=40, height=100, width=window_width)
+    frame_top.place(y=1, height=100, width=window_width)
     frame_top.pack
 
     frame_main = tk.Frame(root, bg='white')
-    frame_main.place(y=140, height=window_height - 160, width=window_width)
+    frame_main.place(y=100, height=window_height - 160, width=window_width)
     frame_main.pack
 
     frame_bottom = tk.Frame(root, bg='grey')
     frame_bottom.place(y=708, height=60, width=window_width)
     frame_bottom.pack
 
-    title = ttk.Label(root, text=appname, font='Arial 18 bold')
+    title = ttk.Label(frame_top, text=appname, font='Arial 18 bold')
     title.place(x=20, y=1)
     # Show splash screen for a couple of seconds or destroy on click
     show_splash_screen(frame_main)
