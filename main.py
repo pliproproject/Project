@@ -155,8 +155,8 @@ if __name__ == '__main__':
     lbl_splash.place(x=100, y=30)
     lbl_hi_scores = ttk.Label(frame_hi_scores, text='hi scores', font='Arial 16 bold')
     lbl_hi_scores.place(x=200, y=30)
-    lbl_play = ttk.Label(frame_play, text='play', font='Arial 16 bold')
-    lbl_play.place(x=300, y=30)
+  #  lbl_play = ttk.Label(frame_play, text='play', font='Arial 16 bold')
+  #  lbl_play.place(x=300, y=30)
     lbl_end_game = ttk.Label(frame_game_score, text='game scores', font='Arial 16 bold')
     lbl_end_game.place(x=400, y=30)
     # ---------------------------------------------------------------------------------------------------
@@ -185,4 +185,5 @@ if __name__ == '__main__':
     btn_exit = ttk.Button(frame_bottom, text='Exit', command=lambda: root.quit())
     btn_exit.place(x=window_width - 100, y=20)
 # -------------------------------------------------------------------------------------------------------
+
     root.mainloop()
