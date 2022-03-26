@@ -14,15 +14,17 @@ def grab_answer(ans, qa, current_que, answerlist):
 
 
 def show_question(parent, qa, current_que, answerlist):
-    ans = tk.IntVar()
-    ttk.Label(parent, text=qa[current_que]['que'], font='Arial 16 bold').place(x=100, y=20)
+    current_que++1
+    ans = tk.StringVar()
+    ttk.Label(parent, text=str(current_que+1) + '.' + ' ' + qa[current_que]['question'],
+              font='Arial 16 bold', wraplength=900, justify="left").place(x=100, y=20)
     answerlist = [0, 0]
-    answers = [qa[current_que]['correct'], *qa[current_que]['ans']]
+    answers = [qa[current_que]['correct_answer'], *qa[current_que]['incorrect_answers']]
     random.shuffle(answers)
     radio_count = 0
     radios = []
     for a in answers:
-        radio_button = ttk.Radiobutton(parent, text=a, variable=ans, value=radio_count,
+        radio_button = ttk.Radiobutton(parent, text=a, variable=ans, value=a,
                                        command=lambda: grab_answer(ans, qa, current_que, answerlist))
         radio_button.place(x=200, y=100 + (30 * radio_count))
         radio_count += 1
@@ -35,41 +37,24 @@ def show_question(parent, qa, current_que, answerlist):
 
 def check_answers(qa, answerlist):
     for current_que in range(0, len(qa)):
-        #        if qa[current_que]['correct'] == answerlist[k - 1]:
-        #            pass
-        #        else:
-        print(current_que, qa[current_que]['que'], answerlist[0], '----', qa[current_que]['user_answer'],
+        print(current_que, qa[current_que]['question'], answerlist[0], '----', qa[current_que]['user_answer'],
               qa[current_que]['elapsed_time'])
+        if qa[current_que]['correct_answer'] == qa[current_que]['user_answer']:
+            print(current_que+1, 'correct')
+        else:
+            print(current_que+1, 'wrong')
 
 
 def play(qa, parent):
+    # Η παρακάτω εντολή ανακατεύει τη σειρά των ερωτήσεων
+    random.shuffle(qa)
     for q in qa:
         q['user_answer'] = -1
         q['elapsed_time'] = 0
     ans = tk.IntVar()
     answerlist = [range(2)]
-    current_que = 0
+    current_que = -1
     ans = show_question(parent, qa, current_que, answerlist)
     print('ans=', ans, '-->', answerlist)
-    ttk.Button(parent, text="check", command=lambda: check_answers(qa, answerlist)).place(x=600, y=20)
-
-
-"""
-    for current_que in range(0, len(qa)):
-        # Δημιουργεί το label με την ερώτηση
-        ttk.Label(parent, text=qa[current_que]['que'], font='Arial 16 bold').place(x=100, y=20)
-        # Η σωστή και οι υπόλοιπες απαντήσεις της τρέχουσας ερώτησης εκχωρούνται στη λίστα answers
-        answers = [qa[current_que]['correct'], *qa[current_que]['ans']]
-        # Ανακάτεμα των απαντήσεων
-        random.shuffle(answers)
-        j = 0
-        # με το παρακάτω loop φτιάχνει τα radio buttons των απαντήσεων
-        for a in answers:
-            ttk.Radiobutton(parent, text=a, variable=ans, value=j).place(x=200, y=100 + (30 * j))
-            j += 1
-        k = 1
-        if qa[current_que]['correct'] == answers[k - 1]:
-            pass
-        else:
-            pass
-"""
+    ttk.Button(parent, text="check", command=lambda: check_answers(qa, answerlist)).place(x=600, y=500)
+    ttk.Button(parent, text="next question", command=lambda: show_question(parent, qa, current_que, answerlist)).place(x=750, y=500)
