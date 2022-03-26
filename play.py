@@ -7,6 +7,7 @@ import random
 def grab_answer(ans, qa, current_que, answerlist):
     print('a/a:', current_que, '--->', ans.get())
     answerlist[current_que] = ans.get()
+    qa[current_que]['user_answer'] = ans.get()
 
 
 #  return answerlist
@@ -14,14 +15,15 @@ def grab_answer(ans, qa, current_que, answerlist):
 
 def show_question(parent, qa, current_que, answerlist):
     ans = tk.IntVar()
-    ttk.Label(parent, text=qa['que'], font='Arial 16 bold').place(x=100, y=20)
-    answers = [qa['correct'], *qa['ans']]
+    ttk.Label(parent, text=qa[current_que]['que'], font='Arial 16 bold').place(x=100, y=20)
+    answerlist = [0, 0]
+    answers = [qa[current_que]['correct'], *qa[current_que]['ans']]
     random.shuffle(answers)
     radio_count = 0
     radios = []
     for a in answers:
         radio_button = ttk.Radiobutton(parent, text=a, variable=ans, value=radio_count,
-                                       command=lambda: grab_answer(ans, qa, current_que, answerlist, ))
+                                       command=lambda: grab_answer(ans, qa, current_que, answerlist))
         radio_button.place(x=200, y=100 + (30 * radio_count))
         radio_count += 1
         if a == 0:
@@ -36,15 +38,18 @@ def check_answers(qa, answerlist):
         #        if qa[current_que]['correct'] == answerlist[k - 1]:
         #            pass
         #        else:
-        print(current_que, qa[current_que]['que'], answerlist[0])
+        print(current_que, qa[current_que]['que'], answerlist[0], '----', qa[current_que]['user_answer'],
+              qa[current_que]['elapsed_time'])
 
 
 def play(qa, parent):
-
+    for q in qa:
+        q['user_answer'] = -1
+        q['elapsed_time'] = 0
     ans = tk.IntVar()
     answerlist = [range(2)]
     current_que = 0
-    ans = show_question(parent, qa[current_que], current_que, answerlist)
+    ans = show_question(parent, qa, current_que, answerlist)
     print('ans=', ans, '-->', answerlist)
     ttk.Button(parent, text="check", command=lambda: check_answers(qa, answerlist)).place(x=600, y=20)
 
