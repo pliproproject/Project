@@ -2,7 +2,8 @@ from tkinter import ttk
 
 
 def get_questions(category, difficulty):
-    qa = {'que': 'Which is the capital of Peru?', 'ans': ["Lima", "Paris", "London", "Rome"]}
+    qa = [{'que': 'which is the capital of Peru', 'correct': 'Peru', 'ans': ['London', 'Paris', 'Rome']},
+          {'que': 'which is the capital of France', 'correct': 'Paris', 'ans': ['Madrid', 'Amsterdam', 'Brussels']}]
     return qa
 
 
