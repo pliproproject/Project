@@ -8,6 +8,16 @@ def check_answer(v):
     print('--->', v.get())
 
 
+def show_question(parent, qa):
+    ans = tk.IntVar()
+    ttk.Label(parent, text=qa['que'], font='Arial 16 bold').place(x=100, y=20)
+    answers = [qa['correct'], *qa['ans']]
+    random.shuffle(answers)
+    j = 0
+    for a in answers:
+        ttk.Radiobutton(parent, text=a, variable=ans, value=j).place(x=200, y=100 + (30 * j))
+        j += 1
+    return ans
 
 
 def play(qa, parent):
