@@ -101,7 +101,7 @@ def play_game():
     frame_user_data_hide()
     frame_play_show()
     qa = get_questions(1, 1)
-    play(qa, frame_play)
+    play(qa, frame_play, frame_top, frame_bottom)
 
 
 def end_game():
@@ -155,35 +155,35 @@ if __name__ == '__main__':
     lbl_splash.place(x=100, y=30)
     lbl_hi_scores = ttk.Label(frame_hi_scores, text='hi scores', font='Arial 16 bold')
     lbl_hi_scores.place(x=200, y=30)
-  #  lbl_play = ttk.Label(frame_play, text='play', font='Arial 16 bold')
-  #  lbl_play.place(x=300, y=30)
+    #  lbl_play = ttk.Label(frame_play, text='play', font='Arial 16 bold')
+    #  lbl_play.place(x=300, y=30)
     lbl_end_game = ttk.Label(frame_game_score, text='game scores', font='Arial 16 bold')
     lbl_end_game.place(x=400, y=30)
     # ---------------------------------------------------------------------------------------------------
     # Έχω βάλει προς το παρόν buttons ια να κάνουμε τις εναλλαγές από τη μια κατάσταση στην άλλη κάποια από αυτά θα
     # φύγουν. Για παράδειγμα, από τη splash screen θα φεύγει μετά από κάποια δευτερόλεπτα ή μετά από click
     btn_exit_splash = ttk.Button(frame_bottom, text="1. exit splash screen", command=exit_splash)
-    btn_exit_splash.place(x=20, y=20)
+    btn_exit_splash.place(x=5, y=20)
 
     # start new game button (ask username etc.)
     btn_start = ttk.Button(frame_bottom, text="2. Enter name, category, difficulty", command=start_new_game)
-    btn_start.place(x=150, y=20)
+    btn_start.place(x=120, y=20)
 
     # play button
     btn_play = ttk.Button(frame_bottom, text="3. Start Game", command=play_game)
-    btn_play.place(x=350, y=20)
+    btn_play.place(x=310, y=20)
 
     # game end-score button
     btn_end_game = ttk.Button(frame_bottom, text="4. End Game", command=end_game)
-    btn_end_game.place(x=450, y=20)
+    btn_end_game.place(x=390, y=20)
 
     # Hi-score button
     btn_hi_scores2 = ttk.Button(frame_bottom, text="5. hi scores", command=high_scores)
-    btn_hi_scores2.place(x=550, y=20)
+    btn_hi_scores2.place(x=470, y=20)
 
     # exit button
     btn_exit = ttk.Button(frame_bottom, text='Exit', command=lambda: root.quit())
     btn_exit.place(x=window_width - 100, y=20)
-# -------------------------------------------------------------------------------------------------------
+    # -------------------------------------------------------------------------------------------------------
 
     root.mainloop()

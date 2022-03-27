@@ -4,57 +4,93 @@ from tkinter import ttk, StringVar
 import random
 
 
-def grab_answer(ans, qa, current_que, answerlist):
-    print('a/a:', current_que, '--->', ans.get())
-    answerlist[current_que] = ans.get()
-    qa[current_que]['user_answer'] = ans.get()
+def keep_answer(answer, qa, current_que):
+    print('a/a:', current_que, '--->', answer.get())
+    qa[current_que[0]]['user_answer'] = answer.get()
 
 
-#  return answerlist
+def next_question(parent, qa, current_que):
+    print('a/a=', current_que, '---len(qa)=', len(qa))
+    if current_que[0] < len(qa):
+        current_que[0] = current_que[0] + 1
+        show_question(parent, qa, current_que)
 
 
-def show_question(parent, qa, current_que, answerlist):
-    current_que++1
-    ans = tk.StringVar()
-    ttk.Label(parent, text=str(current_que+1) + '.' + ' ' + qa[current_que]['question'],
-              font='Arial 16 bold', wraplength=900, justify="left").place(x=100, y=20)
-    answerlist = [0, 0]
-    answers = [qa[current_que]['correct_answer'], *qa[current_que]['incorrect_answers']]
+def prev_question(parent, qa, current_que):
+    if current_que[0] > 0:
+        current_que[0] = current_que[0] - 1
+        show_question(parent, qa, current_que)
+
+
+def first_question(parent, qa, current_que):
+    current_que[0] = 0
+    show_question(parent, qa, current_que)
+
+
+def last_question(parent, qa, current_que):
+    current_que[0] = len(qa)
+    show_question(parent, qa, current_que)
+
+
+def show_question(parent, qa, current_que):
+    # διαγράφει όλα τα controls του frame για να εμφανίσει την επόμενη ερώτηση
+    for widgets in parent.winfo_children():
+        widgets.destroy()
+    # current_que[0] = current_que[0] + 1
+    print('current question=', current_que[0] + 1)
+    answer = tk.StringVar()
+    label_que = ttk.Label(parent, text=str(current_que[0] + 1) + '.' + ' ' + qa[current_que[0]]['question'],
+                          font='Arial 16 bold', wraplength=900, justify="left")
+    label_que.place(x=100, y=20)
+    answers = [qa[current_que[0]]['correct_answer'], *qa[current_que[0]]['incorrect_answers']]
     random.shuffle(answers)
     radio_count = 0
     radios = []
     for a in answers:
-        radio_button = ttk.Radiobutton(parent, text=a, variable=ans, value=a,
-                                       command=lambda: grab_answer(ans, qa, current_que, answerlist))
+        radio_button = ttk.Radiobutton(parent, text=a, variable=answer, value=a,
+                                       command=lambda: keep_answer(answer, qa, current_que))
         radio_button.place(x=200, y=100 + (30 * radio_count))
         radio_count += 1
-        if a == 0:
+        # Αν ο παίκτης έχει απαντήσει προηγουμένως αυτή την ερώτηση, θα κάνει selected το συγκεκριμένο radio
+        # print("a=", a, "---user answer=", qa[current_que]['user_answer'])
+        if qa[current_que[0]]['user_answer'] == a:
+        #         pass
+            print('already answered')
             radio_button.invoke()
+
+        #      if a == 0:
+        #          radio_button.invoke()
         radios.append(radio_button)
+    return
 
-    return ans.get()
 
-
-def check_answers(qa, answerlist):
-    for current_que in range(0, len(qa)):
-        print(current_que, qa[current_que]['question'], answerlist[0], '----', qa[current_que]['user_answer'],
-              qa[current_que]['elapsed_time'])
-        if qa[current_que]['correct_answer'] == qa[current_que]['user_answer']:
-            print(current_que+1, 'correct')
+def check_answers(qa):
+    for que in range(0, len(qa)):
+        print(que + 1, qa[que]['question'], '-user answer=', qa[que]['user_answer'], '-time=',
+              qa[que]['elapsed_time'])
+        if qa[que]['correct_answer'] == qa[que]['user_answer']:
+            print(que + 1, 'correct')
         else:
-            print(current_que+1, 'wrong')
+            print(que + 1, 'wrong')
 
 
-def play(qa, parent):
+def play(qa, parent, frame_top, frame_bottom):
     # Η παρακάτω εντολή ανακατεύει τη σειρά των ερωτήσεων
     random.shuffle(qa)
+    # φτιάχνει 2 κλειδιά στο λεξικό κάθε ερώτησης, την απάντηση του παίκτη με τιμή -1 και το χρόνο με τιμή 0
     for q in qa:
         q['user_answer'] = -1
         q['elapsed_time'] = 0
-    ans = tk.IntVar()
-    answerlist = [range(2)]
-    current_que = -1
-    ans = show_question(parent, qa, current_que, answerlist)
-    print('ans=', ans, '-->', answerlist)
-    ttk.Button(parent, text="check", command=lambda: check_answers(qa, answerlist)).place(x=600, y=500)
-    ttk.Button(parent, text="next question", command=lambda: show_question(parent, qa, current_que, answerlist)).place(x=750, y=500)
+    # ans = tk.IntVar()
+    # Η τρέχουσα ερώτηση (current_que) ορίζεται σαν λίστα για να μπορεί να αλλάξει τιμή μέσα από άλλη συνάρτηση
+    current_que = [0]
+    show_question(parent, qa, current_que)
+    ttk.Button(frame_bottom, text="check", command=lambda: check_answers(qa)).place(x=800, y=20)
+    ttk.Button(frame_bottom, text="next question", command=lambda: next_question(parent, qa, current_que)).place(x=550,
+                                                                                                                 y=1)
+    ttk.Button(frame_bottom, text="prev question", command=lambda: prev_question(parent, qa, current_que)).place(x=550,
+                                                                                                                 y=30)
+    ttk.Button(frame_bottom, text="1st question", command=lambda: first_question(parent, qa, current_que)).place(x=650,
+                                                                                                                 y=1)
+    ttk.Button(frame_bottom, text="last question", command=lambda: last_question(parent, qa, current_que)).place(x=650,
+                                                                                                                 y=30)
