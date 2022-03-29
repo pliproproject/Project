@@ -44,48 +44,6 @@ from multiprocessing import Process
 appname = "doYouKnow?"
 
 
-def submit(parent, hour, minute, second):
-    try:
-        # the input provided by the user is
-        # stored in here :temp
-        temp = int(hour.get()) * 3600 + int(minute.get()) * 60 + int(second.get())
-    except:
-        print("Please input the right value")
-    while temp > -1:
-
-        # divmod(firstvalue = temp//60, secondvalue = temp%60)
-        mins, secs = divmod(temp, 60)
-
-        # Converting the input entered in mins or secs to hours,
-        # mins ,secs(input = 110 min --> 120*60 = 6600 => 1hr :
-        # 50min: 0sec)
-        hours = 0
-        if mins > 60:
-            # divmod(firstvalue = temp//60, secondvalue
-            # = temp%60)
-            hours, mins = divmod(mins, 60)
-
-        # using format () method to store the value up to
-        # two decimal places
-        hour.set("{0:2d}".format(hours))
-        minute.set("{0:2d}".format(mins))
-        second.set("{0:2d}".format(secs))
-
-        # updating the GUI window after decrementing the
-        # temp value every time
-        parent.update()
-        time.sleep(1)
-
-        # when temp value = 0; then a messagebox pop's up
-        # with a message:"Time's up"
-        if temp == 0:
-            messagebox.showinfo("Time Countdown", "Time's up ")
-
-        # after every one sec the value of temp will be decremented
-        # by one
-        temp -= 1
-
-
 # ------------------------- frame show/hide functions-----------------------------
 def frame_splash_show():
     frame_splash.place(y=100, height=window_height - 160, width=window_width)
@@ -154,19 +112,13 @@ def play_game():
     frame_user_data_hide()
     frame_play_show()
     qa = get_questions(1, 1)
-
-    hour = StringVar()
-    minute = StringVar()
+    # Η συνάρτηση που τρέχει αντίστροφα το χρόνο του παιχνιδιού θα πρέπει να τρέξει παράλληλα με την play
     second = StringVar()
-
-    hour.set("00")
-    minute.set("00")
-    second.set("05")
-
-    secondEntry = ttk.Entry(frame_top, width=3, font=("Arial", 18, ""), textvariable=second)
-    secondEntry.place(x=180, y=20)
+    second.set("180")
+    secondentry = ttk.Entry(frame_top, width=3, font=("Arial", 18, ""), textvariable=second)
+    secondentry.place(x=180, y=20)
     # play(qa, frame_play, frame_top, frame_bottom)
-    runinparallel(play(qa, frame_play, frame_top, frame_bottom), submit(frame_top, hour, minute, second))
+    runinparallel(play(qa, frame_play, frame_top, frame_bottom), submit(frame_top, second))
 
 
 def end_game():

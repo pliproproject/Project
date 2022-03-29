@@ -7,6 +7,7 @@ import threading
 from tkinter import messagebox
 from multiprocessing import Process
 
+
 def keep_answer(answer, qa, current_que):
     print('a/a:', current_que, '--->', answer.get())
     qa[current_que[0]]['user_answer'] = answer.get()
@@ -85,13 +86,11 @@ def countdown(t):
         t -= 1
 
 
-
-
 def play(qa, parent, frame_top, frame_bottom):
-   # thread = threading.Thread(target=submit(frame_top, hour, minute, second))
-   # thread.start()
- #   p1 = Process(target=submit(frame_top, hour, minute, second))
- #   p1.start()
+    # thread = threading.Thread(target=submit(frame_top, hour, minute, second))
+    # thread.start()
+    #   p1 = Process(target=submit(frame_top, hour, minute, second))
+    #   p1.start()
     # countdown(180)
     # Η παρακάτω εντολή ανακατεύει τη σειρά των ερωτήσεων
     random.shuffle(qa)
@@ -108,8 +107,8 @@ def play(qa, parent, frame_top, frame_bottom):
     # ans = tk.IntVar()
     # Η τρέχουσα ερώτηση (current_que) ορίζεται σαν λίστα για να μπορεί να αλλάξει τιμή μέσα από άλλη συνάρτηση
     current_que = [0]
- #   p2 = Process(target=show_question(parent, qa, current_que))
- #   p2.start()
+    #   p2 = Process(target=show_question(parent, qa, current_que))
+    #   p2.start()
     show_question(parent, qa, current_que)
     ttk.Button(frame_bottom, text="check", command=lambda: check_answers(qa)).place(x=800, y=20)
     ttk.Button(frame_bottom, text="next question", command=lambda: next_question(parent, qa, current_que)).place(x=550,
@@ -120,3 +119,29 @@ def play(qa, parent, frame_top, frame_bottom):
                                                                                                                  y=1)
     ttk.Button(frame_bottom, text="last question", command=lambda: last_question(parent, qa, current_que)).place(x=650,
                                                                                                                  y=30)
+
+
+def submit(parent, second):
+    try:
+        # the input provided by the user is
+        # stored in here :temp
+        temp = int(second.get())
+    except:
+        print("Please input the right value")
+    while temp > -1:
+        secs = temp
+        # using format () method to store the value up to 3 decimal places
+        second.set("{0:3d}".format(secs))
+
+        # updating the GUI window after decrementing the
+        # temp value every time
+        parent.update()
+        time.sleep(1)
+
+        # when temp value = 0; then a messagebox pop's up
+        # with a message:"Time's up"
+        if temp == 0:
+            messagebox.showinfo("Time Countdown", "Time's up ")
+        # after every one sec the value of temp will be decremented
+        # by one
+        temp -= 1
