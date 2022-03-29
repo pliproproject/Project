@@ -77,21 +77,33 @@ def check_answers(qa):
             print(que + 1, 'wrong')
 
 
-def countdown(t):
-    while t:
-        mins, secs = divmod(t, 60)
-        timer = '{:02d}:{:02d}'.format(mins, secs)
-        print(timer, end="\r")
+def countdown(parent, second, qa):
+    temp = int(second.get())
+    while temp > -1:
+        secs = temp
+        # using format () method to store the value up to 3 decimal places
+        second.set("{0:3d}".format(secs))
+        # updating the GUI window after decrementing the
+        # temp value every time
+        parent.update()
         time.sleep(1)
-        t -= 1
+        # when temp value = 0; then a messagebox pop's up
+        # with a message:"Time's up"
+        if temp == 0:
+            messagebox.showinfo("Τέλος", "Η χρόνος έληξε! ")
+            check_answers(qa)
+        # after every one sec the value of temp will be decremented
+        # by one
+        temp -= 1
 
 
 def play(qa, parent, frame_top, frame_bottom):
-    # thread = threading.Thread(target=submit(frame_top, hour, minute, second))
-    # thread.start()
-    #   p1 = Process(target=submit(frame_top, hour, minute, second))
-    #   p1.start()
-    # countdown(180)
+    second = StringVar()
+    second.set("20")
+    tk.Label(frame_top, font=("Arial", 18, ""), bg='lightgray', text='Χρόνος:').place(x=860, y=30)
+    seconds = tk.Label(frame_top, width=3,  font=("Arial", 18, ""),  bg='lightgray',fg='red', textvariable=second)
+    seconds.place(x=950, y=30)
+    threading.Thread(target=lambda: countdown(frame_top, second, qa)).start()
     # Η παρακάτω εντολή ανακατεύει τη σειρά των ερωτήσεων
     random.shuffle(qa)
     # φτιάχνει 2 κλειδιά στο λεξικό κάθε ερώτησης, την απάντηση του παίκτη με τιμή -1 και το χρόνο με τιμή 0
@@ -120,28 +132,3 @@ def play(qa, parent, frame_top, frame_bottom):
     ttk.Button(frame_bottom, text="last question", command=lambda: last_question(parent, qa, current_que)).place(x=650,
                                                                                                                  y=30)
 
-
-def submit(parent, second):
-    try:
-        # the input provided by the user is
-        # stored in here :temp
-        temp = int(second.get())
-    except:
-        print("Please input the right value")
-    while temp > -1:
-        secs = temp
-        # using format () method to store the value up to 3 decimal places
-        second.set("{0:3d}".format(secs))
-
-        # updating the GUI window after decrementing the
-        # temp value every time
-        parent.update()
-        time.sleep(1)
-
-        # when temp value = 0; then a messagebox pop's up
-        # with a message:"Time's up"
-        if temp == 0:
-            messagebox.showinfo("Time Countdown", "Time's up ")
-        # after every one sec the value of temp will be decremented
-        # by one
-        temp -= 1

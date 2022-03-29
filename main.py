@@ -39,7 +39,6 @@ from time import sleep
 from get_questions import *
 from high_scores import *
 from play import *
-from multiprocessing import Process
 
 appname = "doYouKnow?"
 
@@ -98,27 +97,11 @@ def start_new_game():
     userdata = get_user_data(frame_user_data)
 
 
-def runinparallel(*fns):
-    proc = []
-    for fn in fns:
-        p = Process(target=fn)
-        p.start()
-        proc.append(p)
-    for p in proc:
-        p.join()
-
-
 def play_game():
     frame_user_data_hide()
     frame_play_show()
     qa = get_questions(1, 1)
-    # Η συνάρτηση που τρέχει αντίστροφα το χρόνο του παιχνιδιού θα πρέπει να τρέξει παράλληλα με την play
-    second = StringVar()
-    second.set("180")
-    secondentry = ttk.Entry(frame_top, width=3, font=("Arial", 18, ""), textvariable=second)
-    secondentry.place(x=180, y=20)
-    # play(qa, frame_play, frame_top, frame_bottom)
-    runinparallel(play(qa, frame_play, frame_top, frame_bottom), submit(frame_top, second))
+    play(qa, frame_play, frame_top, frame_bottom)
 
 
 def end_game():
