@@ -87,13 +87,10 @@ def countdown(parent, second, qa):
         # temp value every time
         parent.update()
         time.sleep(1)
-        # when temp value = 0; then a messagebox pop's up
-        # with a message:"Time's up"
         if temp == 0:
             messagebox.showinfo("Τέλος", "Η χρόνος έληξε! ")
             check_answers(qa)
-        # after every one sec the value of temp will be decremented
-        # by one
+        # after every one sec the value of temp will be decremented by one
         temp -= 1
 
 
