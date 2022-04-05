@@ -44,24 +44,20 @@ appname = "doYouKnow?"
 
 
 # ------------------------- frame show/hide functions-----------------------------
-def frame_splash_show():
-    frame_splash.place(y=100, height=window_height - 160, width=window_width)
-
-
-def frame_splash_hide():
-    frame_splash.place_forget()
 
 
 def frame_hi_scores_show():
-    frame_hi_scores.place(y=100, height=window_height - 160, width=window_width)
+    show_high_scores(frame_hi_scores)
 
 
 def frame_hi_scores_hide():
     frame_hi_scores.place_forget()
 
 
+
 def frame_user_data_show():
     frame_user_data.place(y=100, height=window_height - 160, width=window_width)
+
 
 
 def frame_user_data_hide():
@@ -76,8 +72,16 @@ def frame_play_hide():
     frame_play.place_forget()
 
 
+
 def frame_game_score_show():
     frame_game_score.place(y=100, height=window_height - 160, width=window_width)
+    infos = get_user_data(frame_user_data)
+    At = [5, 7, 5, 8, 1, 6, 7, 8, 9]
+    c = [1, 1, 1, 1, 1, 1, 1, 1, 1]
+    show_game_score(frame_game_score, c, infos[2], At)
+
+
+
 
 
 def frame_game_score_hide():
@@ -86,8 +90,7 @@ def frame_game_score_hide():
 
 # ----------------------------------------------------------------------------------
 def exit_splash():
-    frame_splash_hide()
-    frame_hi_scores_show()
+    frame_hi_scores.place(y=100, height=window_height - 160, width=window_width)
     show_high_scores(frame_hi_scores)
 
 
@@ -97,6 +100,7 @@ def start_new_game():
     userdata = get_user_data(frame_user_data)
 
 
+
 def play_game():
     frame_user_data_hide()
     frame_play_show()
@@ -104,19 +108,24 @@ def play_game():
     play(qa, frame_play, frame_top, frame_bottom)
 
 
+
 def end_game():
     frame_play_hide()
+    infos = get_user_data(frame_user_data)
+    At = [5, 3, 2, 8, 19, 6, 7, 80, 9]
+    c = [1, 1, 1, 1, 1, 1, 1, 1, 1]
+    finalscore = show_game_score(frame_game_score, c, infos[2], At)
+    insert_high_score(infos[0], infos[1], infos[2], 2, 180, 7, 1, finalscore)
     frame_game_score_show()
-    show_game_score(frame_game_score)
-
 
 def high_scores():
+    frame_user_data_hide()
     frame_game_score_hide()
     frame_hi_scores_show()
 
 
-# ----------------- main --------------------------
-if __name__ == '__main__':
+def main_window():
+    splash_root.destroy()
     # create main form
     root = tk.Tk()
     root.title(appname)
@@ -138,33 +147,20 @@ if __name__ == '__main__':
     root.geometry(f"{window_width}x{window_height}+{center_x}+{center_y}")
 
     # create all frames needed
+    global frame_hi_scores, frame_user_data, frame_play, frame_game_score,\
+        frame_top, frame_bottom, btn_hi_scores2
     frame_top = tk.Frame(root, bg='lightgray')
     frame_top.place(y=1, height=100, width=window_width)
-    frame_splash = tk.Frame(root, bg='aliceblue')
     frame_hi_scores = tk.Frame(root, bg='gainsboro')
     frame_user_data = tk.Frame(root, bg='whitesmoke')
     frame_play = tk.Frame(root, bg='white')
     frame_game_score = tk.Frame(root, bg='azure')
     frame_bottom = tk.Frame(root, bg='lightgrey')
     frame_bottom.place(y=708, height=60, width=window_width)
-    frame_splash_show()
-    # ------------------------------------------------
 
-    # τα παρακάτω labels τα έχω βάλει μόνο για να επιβεβαιώσω ότι αλλάζουν οκ τα frames. Θα τα σβήσουμε
-    lbl_splash = ttk.Label(frame_splash, text='splash screen', font='Arial 16 bold')
-    lbl_splash.place(x=100, y=30)
-    lbl_hi_scores = ttk.Label(frame_hi_scores, text='hi scores', font='Arial 16 bold')
-    lbl_hi_scores.place(x=200, y=30)
-    #  lbl_play = ttk.Label(frame_play, text='play', font='Arial 16 bold')
-    #  lbl_play.place(x=300, y=30)
-    lbl_end_game = ttk.Label(frame_game_score, text='game scores', font='Arial 16 bold')
-    lbl_end_game.place(x=400, y=30)
-    # ---------------------------------------------------------------------------------------------------
-    # Έχω βάλει προς το παρόν buttons ια να κάνουμε τις εναλλαγές από τη μια κατάσταση στην άλλη κάποια από αυτά θα
-    # φύγουν. Για παράδειγμα, από τη splash screen θα φεύγει μετά από κάποια δευτερόλεπτα ή μετά από click
-    btn_exit_splash = ttk.Button(frame_bottom, text="1. exit splash screen", command=exit_splash)
-    btn_exit_splash.place(x=5, y=20)
-
+    # exit button
+    btn_exit = ttk.Button(frame_bottom, text='Exit', command=root.destroy)
+    btn_exit.place(x=window_width - 100, y=20)
     # start new game button (ask username etc.)
     btn_start = ttk.Button(frame_bottom, text="2. Enter name, category, difficulty", command=start_new_game)
     btn_start.place(x=120, y=20)
@@ -180,10 +176,56 @@ if __name__ == '__main__':
     # Hi-score button
     btn_hi_scores2 = ttk.Button(frame_bottom, text="5. hi scores", command=high_scores)
     btn_hi_scores2.place(x=470, y=20)
-
-    # exit button
-    btn_exit = ttk.Button(frame_bottom, text='Exit', command=lambda: root.quit())
-    btn_exit.place(x=window_width - 100, y=20)
-    # -------------------------------------------------------------------------------------------------------
-
+    exit_splash()
     root.mainloop()
+
+
+# ----------------- main --------------------------
+if __name__ == '__main__':
+    #splash screen
+    splash_root = Tk()
+    window_width = 1024
+    window_height = 568
+    min_width = 200
+    max_width = window_width
+    min_height = 200
+    max_height = window_height
+    splash_root.minsize(min_width, min_height)
+    splash_root.maxsize(max_width, max_height)
+    # get the screen dimension
+    screen_width = splash_root.winfo_screenwidth()
+    screen_height = splash_root.winfo_screenheight()
+
+    # find the center point
+    center_x = int(screen_width / 2 - window_width / 2)
+    center_y = int(screen_height / 2 - window_height / 2)
+    splash_root.geometry(f"{window_width}x{window_height}+{center_x}+{center_y}")
+    splash_root.overrideredirect(True)
+
+    #splash screen labels
+    lbl_splash = ttk.Label(splash_root, text='THE CREATORS', font='Arial 18 bold')
+    lbl_splash.place(x=400, y=30)
+    lbl_splash2 = ttk.Label(splash_root, text='Αλέξανδρος Μανουσάκης', font='Arial 16 bold')
+    lbl_splash2.place(x=55, y=200)
+    lbl_splash3 = ttk.Label(splash_root, text='Νίκος Σεμερτζιδης', font='Arial 16 bold')
+    lbl_splash3.place(x=415, y=200)
+    lbl_splash4 = ttk.Label(splash_root, text='Συμεών Βουτέρος', font='Arial 16 bold')
+    lbl_splash4.place(x=725, y=200)
+
+    # ------------------------------------------------
+
+    splash_root.after(3000, main_window)
+    # τα παρακάτω labels τα έχω βάλει μόνο για να επιβεβαιώσω ότι αλλάζουν οκ τα frames. Θα τα σβήσουμε
+    #lbl_hi_scores = ttk.Label(frame_hi_scores, text='hi scores', font='Arial 16 bold')
+    #lbl_hi_scores.place(x=200, y=30)
+    #  lbl_play = ttk.Label(frame_play, text='play', font='Arial 16 bold')
+    #  lbl_play.place(x=300, y=30)
+    #lbl_end_game = ttk.Label(frame_game_score, text='game scores', font='Arial 16 bold')
+    #lbl_end_game.place(x=400, y=30)
+    # ---------------------------------------------------------------------------------------------------
+    # Έχω βάλει προς το παρόν buttons ια να κάνουμε τις εναλλαγές από τη μια κατάσταση στην άλλη κάποια από αυτά θα
+    # φύγουν. Για παράδειγμα, από τη splash screen θα φεύγει μετά από κάποια δευτερόλεπτα ή μετά από click
+    #btn_exit_splash = ttk.Button(frame_bottom, text="1. exit splash screen", command=exit_splash)
+    #btn_exit_splash.place(x=5, y=20)
+
+    splash_root.mainloop()

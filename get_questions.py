@@ -30,5 +30,5 @@ def get_user_data(parent):
     lbl_player = ttk.Label(parent, text='get user name, category, difficulty frame', font='Arial 12 bold')
     lbl_player.place(x=10, y=10)
     category = 'category 1'
-    difficulty = 'difficulty 1'
+    difficulty = "easy"
     return [player, category, difficulty]
