@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import ttk, StringVar
 from tkinter import messagebox
+from tkinter.messagebox import askyesno
 import random
 import time
 import threading
@@ -12,61 +13,75 @@ from get_questions import get_questions
 time_start = 0
 game_duration = 180
 stop_threads = False
-# game_score = [{'name': '', 'category': '', 'difficulty': 0, 'score': 0, 'correct': 0, 'wrong': 0,'not_answered': 0, 'time': 0,'game_sets': 0}]
 game_score = []
 game_number = 0
+
 
 
 def viewing_time():
     global time_start
     return int((perf_counter() - time_start) * 100)
 
+def show_time_to_answer(qa, current_que, frame_top):
+    tta = StringVar()
+    lbl_time_to_answer = tk.Label(frame_top, textvariable=tta, fg="black", bg="yellow", font="Verdana 30 bold")
+    lbl_time_to_answer.place(x=10, y=30)
+    # lbl_time_to_answer.config(text='0000')
+    # tta.set('0000000')
+    print("currentq=", current_que[0], "time to answer=", qa[current_que[0]]['time_to_answer'])
+    tta.set(str(qa[current_que[0]]['time_to_answer']).zfill(6))
 
-def keep_answer(answer, qa, current_que):
+
+
+def keep_answer(answer, qa, current_que, frame_top):
     global time_start
     qa[current_que[0]]['viewing_time'] += viewing_time()
-    print('a/a:', current_que, '--->', answer.get(), '-time=', qa[current_que[0]]['viewing_time'])
+    print('==============================a/a:', current_que, '--->', answer.get(), '-time=', qa[current_que[0]]['viewing_time'])
     qa[current_que[0]]['user_answer'] = answer.get()
-    # επιλέγοντας μια απάντηση ο χρόνο που εμφανίζεται η ερώτηση στον παίχτη γίνεται και ο χρόνος που απαιτήθηκε
+    # επιλέγοντας μια απάντηση, ο χρόνος που εμφανίζεται η ερώτηση στον παίχτη γίνεται και ο χρόνος που απαιτήθηκε
     # για να απαντηθεί
     qa[current_que[0]]['time_to_answer'] = qa[current_que[0]]['viewing_time']
+    show_time_to_answer(qa, current_que, frame_top)
 
 
-def next_question(parent, qa, current_que):
+def next_question(parent, qa, current_que, frame_top):
     global time_start
     print('a/a=', current_que[0], '---len(qa)=', len(qa), "start time=", time_start, "endtime=", perf_counter(), '----',
           perf_counter() - time_start)
     qa[current_que[0]]['viewing_time'] += viewing_time()
     if current_que[0] < len(qa) - 1:
         current_que[0] = current_que[0] + 1
-        show_question(parent, qa, current_que)
+        show_question(parent, qa, current_que, frame_top)
 
 
-def prev_question(parent, qa, current_que):
+def prev_question(parent, qa, current_que, frame_top):
     global time_start
     qa[current_que[0]]['viewing_time'] += viewing_time()
     if current_que[0] > 0:
         current_que[0] = current_que[0] - 1
-        show_question(parent, qa, current_que)
+        show_question(parent, qa, current_que, frame_top)
 
 
-def first_question(parent, qa, current_que):
+def first_question(parent, qa, current_que, frame_top):
     global time_start
     qa[current_que[0]]['viewing_time'] += viewing_time()
     current_que[0] = 0
-    show_question(parent, qa, current_que)
+    show_question(parent, qa, current_que, frame_top)
 
 
-def last_question(parent, qa, current_que):
+def last_question(parent, qa, current_que, frame_top):
     global time_start
     qa[current_que[0]]['viewing_time'] += viewing_time()
     current_que[0] = len(qa) - 1
-    show_question(parent, qa, current_que)
+    show_question(parent, qa, current_que, frame_top)
 
 
-def show_question(parent, qa, current_que):
+def show_question(parent, qa, current_que, frame_top):
     global time_start
     time_start = perf_counter()
+    show_time_to_answer(qa, current_que, frame_top)
+
+
     print("start time=", time_start)
     # διαγράφει όλα τα controls του frame για να εμφανίσει την επόμενη ερώτηση
     for widgets in parent.winfo_children():
@@ -79,20 +94,22 @@ def show_question(parent, qa, current_que):
     radios = []
     for a in qa[current_que[0]]['all_answers']:
         radio_button = ttk.Radiobutton(parent, text=a, variable=answer, value=a,
-                                       command=lambda: keep_answer(answer, qa, current_que))
+                                       command=lambda: keep_answer(answer, qa, current_que, frame_top))
         radio_button.place(x=200, y=100 + (30 * radio_count))
         radio_count += 1
         # Αν ο παίκτης έχει απαντήσει προηγουμένως αυτή την ερώτηση, θα κάνει selected το συγκεκριμένο radio
         if qa[current_que[0]]['user_answer'] == a:
             print('already answered')
-            radio_button.invoke()
+            # Επιλέγει το radio με την απάντηση του παίκτη από προηγούμενη εμφάνιση
+            answer.set(a)
+           # radio_button.invoke() δεν έπαιξε αυτό γιατί καλεί και την keep_answer και χαλάει τους χρόνους
         #      if a == 0:
         #          radio_button.invoke()
         radios.append(radio_button)
     return
 
 
-def check_answers(qa, frame_play, frame_top, frame_bottom, second):
+def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, second):
     global game_number
     global game_score
     global game_duration
@@ -131,8 +148,11 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, second):
                                  and game_score[game_number-2]['not_answered'] < 3):
             game_number += 1
         # messagebox.showinfo(second.get())
-            get_questions(1, 1)
-            play(qa, frame_play, frame_top, frame_bottom)
+            answer = askyesno(title='Επόμενο set ερωτήσεων',
+                              message='Θέλετε να συνεχίσετε το παιχνίδι;')
+            if answer:
+                get_questions(1, 1)
+                play(qa, frame_play, frame_top, frame_bottom)
 
 
 def stop_countdown():
@@ -172,18 +192,18 @@ running = False
 #                 display = "0"
 #             else:
 #                 display = str(counter)
-#             lbl['text'] = display
+#             lbl_time_to_answer['text'] = display
 #             lbl.after(10, count)
 #             counter += 1
 #     count()
 
 
-def play(qa, parent, frame_top, frame_bottom):
+def play(qa, parent, frame_top, frame_bottom, frame_game_score):
     global stop_threads
     second = StringVar()
     second.set("180")
-    lbl = tk.Label(frame_top, text="00", fg="black", bg="yellow", font="Verdana 30 bold")
-    lbl.place(x=10, y=30)
+    # lbl_time_to_answer = tk.Label(frame_top, text="00", fg="black", bg="yellow", font="Verdana 30 bold")
+    # lbl_time_to_answer.place(x=10, y=30)
     # counter_label(lbl, True)
     tk.Label(frame_top, font=("Arial", 18, ""), bg='lightgray', text='Χρόνος:').place(x=860, y=30)
     seconds = tk.Label(frame_top, width=3, font=("Arial", 18, ""), bg='lightgray', fg='red', textvariable=second)
@@ -209,15 +229,15 @@ def play(qa, parent, frame_top, frame_bottom):
     current_que = [0]
     #   p2 = Process(target=show_question(parent, qa, current_que))
     #   p2.start()
-    show_question(parent, qa, current_que)
+    show_question(parent, qa, current_que, frame_top)
     ttk.Button(frame_bottom, text="check",
-               command=lambda: [stop_countdown(), check_answers(qa, parent, frame_top, frame_bottom, second)]).place(
-        x=800, y=20)
-    ttk.Button(frame_bottom, text="next question", command=lambda: next_question(parent, qa, current_que)).place(x=550,
+               command=lambda: [stop_countdown(), check_answers(qa, parent, frame_top, frame_bottom,
+                                                                frame_game_score, second)]).place(x=800, y=20)
+    ttk.Button(frame_bottom, text="next question", command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550,
                                                                                                                  y=1)
-    ttk.Button(frame_bottom, text="prev question", command=lambda: prev_question(parent, qa, current_que)).place(x=550,
+    ttk.Button(frame_bottom, text="prev question", command=lambda: prev_question(parent, qa, current_que, frame_top)).place(x=550,
                                                                                                                  y=30)
-    ttk.Button(frame_bottom, text="1st question", command=lambda: first_question(parent, qa, current_que)).place(x=650,
+    ttk.Button(frame_bottom, text="1st question", command=lambda: first_question(parent, qa, current_que, frame_top)).place(x=650,
                                                                                                                  y=1)
-    ttk.Button(frame_bottom, text="last question", command=lambda: last_question(parent, qa, current_que)).place(x=650,
+    ttk.Button(frame_bottom, text="last question", command=lambda: last_question(parent, qa, current_que, frame_top)).place(x=650,
                                                                                                                  y=30)

@@ -98,7 +98,7 @@ def play_game():
     frame_user_data_hide()
     frame_play_show()
     qa = get_questions(1, 1)
-    play(qa, frame_play, frame_top, frame_bottom)
+    play(qa, frame_play, frame_top, frame_bottom, frame_game_score)
 
 
 def end_game():
