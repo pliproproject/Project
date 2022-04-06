@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from tkinter import ttk, StringVar
 from tkinter import messagebox
 from tkinter.messagebox import askyesno
@@ -9,6 +8,7 @@ import threading
 from time import perf_counter
 
 from get_questions import get_questions
+from high_scores import show_game_score
 
 time_start = 0
 game_duration = 180
@@ -24,10 +24,10 @@ def viewing_time():
 
 def show_time_to_answer(qa, current_que, frame_top):
     tta = StringVar()
-    lbl_time_to_answer = tk.Label(frame_top, textvariable=tta, fg="black", bg="lightgray", font="Arial 12")
-    lbl_time_to_answer.place(x=10, y=30)
+    lbl_time_to_answer = tk.Label(frame_top, textvariable=tta, fg="black", bg="lightgray", font="Arial 18")
+    lbl_time_to_answer.place(x=230, y=30)
     print("currentq=", current_que[0], "time to answer=", qa[current_que[0]]['time_to_answer'])
-    tta.set(str(qa[current_que[0]]['time_to_answer']).rjust(6))  #   .zfill(6))
+    tta.set(str(qa[current_que[0]]['time_to_answer']).zfill(6))
 
 
 def keep_answer(answer, qa, current_que, frame_top):
@@ -84,13 +84,19 @@ def show_question(parent, qa, current_que, frame_top):
     for widgets in parent.winfo_children():
         widgets.destroy()
     answer = tk.StringVar()
+    labelstyle = ttk.Style()  # Creating style element
+    labelstyle.configure('Wild.TLabel', background='white', foreground='black')
     label_que = ttk.Label(parent, text=str(current_que[0] + 1) + '.' + ' ' + qa[current_que[0]]['question'],
-                          font='Arial 16 bold', wraplength=900, justify="left")
+                          font='Arial 16 bold', wraplength=900, justify="left", style='Wild.TLabel')
     label_que.place(x=100, y=20)
     radio_count = 0
     radios = []
+    radiostyle = ttk.Style()  # Creating style element
+    radiostyle.configure('Wild.TRadiobutton',  # First argument is the name of style. Needs to end with: .TRadiobutton
+                         background='white',  # Setting background to our specified color above
+                         foreground='black')  # You can define colors like this also
     for a in qa[current_que[0]]['all_answers']:
-        radio_button = ttk.Radiobutton(parent, text=a, variable=answer, value=a,
+        radio_button = ttk.Radiobutton(parent, text=a, variable=answer, value=a, style='Wild.TRadiobutton',
                                        command=lambda: keep_answer(answer, qa, current_que, frame_top))
         radio_button.place(x=200, y=100 + (30 * radio_count))
         radio_count += 1
@@ -138,18 +144,21 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, sec
     # Αν ο υπολειπόμενος χρόνος είναι > 0 θα πρέπει να ελέγξει αν έχει απαντήσει τουλάχιστον 6 ερωτήσεις τις 2
     print('SCORE=', game_score)
     # Αν ολοκλήρωσε το παιχνίδι εντός του χρόνου
+    game_end = True
     if game_score[game_number]['time'] < game_duration:
         # και αν δεν έχει παίξει πάνω από 2 παιχνίδια ή αν έχει παίξει και δεν έχει αφήσει αναπάντητες πάνω
         # από 3 ερωτήσεις του δίνει τη δυνατότητα να ξαναπαίξει άλλο ένα set
         if (game_number < 2) or (game_number >= 2 and game_score[game_number - 1]['not_answered'] < 3
                                  and game_score[game_number - 2]['not_answered'] < 3):
             game_number += 1
-            # messagebox.showinfo(second.get())
             answer = askyesno(title='Επόμενο set ερωτήσεων',
                               message='Θέλετε να συνεχίσετε το παιχνίδι;')
             if answer:
                 get_questions(1, 1)
                 play(qa, frame_play, frame_top, frame_bottom)
+                game_end = False
+    if game_end:
+        show_game_score(frame_game_score, game_score)
 
 
 def stop_countdown():
@@ -177,8 +186,8 @@ def countdown(parent, second, qa, frame_play, frame_top, frame_bottom):
         temp -= 1
 
 
-counter = 0
-running = False
+# counter = 0
+# running = False
 
 
 # def counter_label(lbl, running):
@@ -202,10 +211,15 @@ def play(qa, parent, frame_top, frame_bottom, frame_game_score):
     # lbl_time_to_answer = tk.Label(frame_top, text="00", fg="black", bg="yellow", font="Verdana 30 bold")
     # lbl_time_to_answer.place(x=10, y=30)
     # counter_label(lbl, True)
+    tk.Label(frame_top, font=("Arial", 18, ""), bg='lightgray', text='Χρόνος απάντησης:').place(x=10, y=30)
     tk.Label(frame_top, font=("Arial", 18, ""), bg='lightgray', text='Χρόνος:').place(x=860, y=30)
     seconds = tk.Label(frame_top, width=3, font=("Arial", 18, ""), bg='lightgray', fg='red', textvariable=second)
     seconds.place(x=950, y=30)
-    threading.Thread(target=lambda: countdown(frame_top, second, qa, parent, frame_top, frame_bottom)).start()
+    # threading.Thread(target=lambda: countdown(frame_top, second, qa, parent, frame_top, frame_bottom)).start()
+    t = threading.Thread(target=lambda: countdown(frame_top, second, qa, parent, frame_top, frame_bottom))
+    t.daemon = True
+    t.start()
+
     # Η παρακάτω εντολή ανακατεύει τη σειρά των ερωτήσεων
     random.shuffle(qa)
     # φτιάχνει 2 κλειδιά στο λεξικό κάθε ερώτησης, την απάντηση του παίκτη με τιμή -1 το χρόνο εμφάνισης κάθε

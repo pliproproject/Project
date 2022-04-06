@@ -151,10 +151,10 @@ def main_window():
     frame_game_score = tk.Frame(root, bg='azure')
     frame_bottom = tk.Frame(root, bg='lightgrey')
     frame_bottom.place(y=708, height=60, width=window_width)
-
     # Έχω βάλει προς το παρόν buttons ια να κάνουμε τις εναλλαγές από τη μια κατάσταση στην άλλη κάποια από αυτά θα
     # φύγουν. Για παράδειγμα, από τη splash screen θα φεύγει μετά από κάποια δευτερόλεπτα ή μετά από click
     # exit button
+    # btn_exit = ttk.Button(frame_bottom, text='Exit', command=root.destroy)
     btn_exit = ttk.Button(frame_bottom, text='Exit', command=root.destroy)
     btn_exit.place(x=window_width - 100, y=20)
     # start new game button (ask username etc.)
