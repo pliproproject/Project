@@ -12,7 +12,8 @@ from get_questions import get_questions
 time_start = 0
 game_duration = 180
 stop_threads = False
-game_score = [{'score': 0, 'correct': 0, 'wrong': 0, 'time':0}]
+# game_score = [{'name': '', 'category': '', 'difficulty': 0, 'score': 0, 'correct': 0, 'wrong': 0,'not_answered': 0, 'time': 0,'game_sets': 0}]
+game_score = []
 game_number = 0
 
 
@@ -92,7 +93,6 @@ def show_question(parent, qa, current_que):
 
 
 def check_answers(qa, frame_play, frame_top, frame_bottom, second):
-    global many_unanswerd
     global game_number
     global game_score
     global game_duration
@@ -101,11 +101,17 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, second):
     score = 0
     difficulty = 1
     not_answered = 1
+    gs = {'name': '', 'category': '', 'difficulty': 0, 'score': 0, 'correct': 0, 'wrong': 0, 'not_answered': 0,
+          'time': 0}
+    game_score.append(gs)
     game_score[game_number]['time'] = game_duration - int(second.get())
+    game_score[game_number]['name'] = 'Παίκτης 1'
+    game_score[game_number]['difficulty'] = difficulty
+    game_score[game_number]['category'] = 'Science'
     for que in range(0, len(qa)):
         # Μετράει τις μη απαντημένες ερωτήσεις
         if len(qa[que]['user_answer']) == 0:
-            not_answered += 1
+            game_score[game_number]['not_answered'] += 1
         print(que + 1, qa[que]['question'], '-user answer=', qa[que]['user_answer'], '-time=',
               qa[que]['time_to_answer'])
         if qa[que]['correct_answer'] == qa[que]['user_answer']:
@@ -116,16 +122,17 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, second):
             game_score[game_number]['wrong'] += 1
             print(que + 1, 'wrong')
     # Αν ο υπολειπόμενος χρόνος είναι > 0 θα πρέπει να ελέγξει αν έχει απαντήσει τουλάχιστον 6 ερωτήσεις τις 2
-    print('SCORE=', game_score[game_number]['score'])
-    # Με το παρακάτω loop μετράει τις μη απαντημένες ερωτήσεις
-    print("not_answered=", not_answered)
-    #if not_answered > 3:
-    #    many_unanswerd += 1
-
-    get_questions(1, 1)
-    # messagebox.showinfo(second.get())
-    print("----------------------------------Game Score:",game_score)
-    play(qa, frame_play, frame_top, frame_bottom)
+    print('SCORE=', game_score)
+    # Αν ολοκλήρωσε το παιχνίδι εντός του χρόνου
+    if game_score[game_number]['time'] < game_duration:
+        # και αν δεν έχει παίξει πάνω από 2 παιχνίδια ή αν έχει παίξει και δεν έχει αφήσει αναπάντητες πάνω
+        # από 3 ερωτήσεις του δίνει τη δυνατότητα να ξαναπαίξει άλλο ένα set
+        if (game_number < 2) or (game_number >= 2 and game_score[game_number-1]['not_answered'] < 3
+                                 and game_score[game_number-2]['not_answered'] < 3):
+            game_number += 1
+        # messagebox.showinfo(second.get())
+            get_questions(1, 1)
+            play(qa, frame_play, frame_top, frame_bottom)
 
 
 def stop_countdown():
