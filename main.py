@@ -132,7 +132,7 @@ def main_window():
     root.geometry(f"{window_width}x{window_height}+{center_x}+{center_y}")
 
     # create all frames needed
-    global frame_hi_scores, frame_user_data, frame_play, frame_game_score,
+    global frame_hi_scores, frame_user_data, frame_play, frame_game_score,\
         frame_top, frame_bottom, btn_hi_scores2
     frame_top = tk.Frame(root, bg='lightgray')
     frame_top.place(y=1, height=100, width=window_width)
