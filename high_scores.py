@@ -134,25 +134,62 @@ def show_splash_screen(parent):
     lbl_splash4.place(x=725, y=200)
 
 
-def show_game_score(parent, c, dif, time):
-    final_score = 0
-    difficulty = []
-    # εδω βρισκω το τελικο σκορ του καθε παιχτη
-    for i in range(0, 9):
-        if dif == "easy":
-            difficulty.append(1)
-        elif dif == "medium":
-            difficulty.append(2)
-        else:
-            difficulty.append(3)
-        final_score += c[i] * difficulty[i] * time[i]
+def show_game_score(parent, game_score):
+    # εδω κοιταω για το ποσες φορες εχει παιξει ο παιχτης και αναλογος βγαζω το αποτελεσμα για το καθενα
+    game_number = len(game_score)
+    score_is = 0
+    wrong_is = 0
+    correct_is = 0
+    time_is = 0
+    if game_number < 1:
+        score_is = game_score[game_number]['score']
+        wrong_is = game_score[game_number]['wrong']
+        correct_is = game_score[game_number]['correct']
+        time_is = game_score[game_number]['time']
 
-    # και εδω το τυπωνω στον χρηστη
+
+    else:
+        for number in range(0, game_number):
+            score_is += game_score[number]['score']
+            wrong_is += game_score[number]['wrong']
+            correct_is += game_score[number]['correct']
+            time_is += game_score[number]['time']
+
+    # ανοιγω την βαση και τραβαω τα 10 πρωτα με ταξινομηση με βαση το score
+    sqlite_connection = sqlite3.connect('Trivia_game.db')
+    c = sqlite_connection.cursor()
+    with sqlite_connection:
+        c.execute("SELECT * FROM highscore ORDER BY score DESC LIMIT 10")
+        items = [c.fetchall()]
+
+    # εδω κοιταω για το εαν εκανε high score ο παιχτης
+    count = 0
+    i = 0
+    for score in items:
+        if not score:
+            count += 1
+            break
+        elif score_is > score[i][8] or len(score) < 11:
+            count += 1
+        i += 1
+
+    # κλεινω την βαση
+    sqlite_connection.close()
+    # αν εκανε high score τυπωνω το αναλογο μυνημα
+    if count > 0:
+        lbl_end_game3 = ttk.Label(parent, text='ΣΥΓΧΑΡΗΤΗΡΙΑ ΠΕΤΥΧΕΣ HIGH SCORE !!! ΜΠΡΑΒΟ !!!!' + "\N{trophy}" +
+                                               "\N{trophy}", font='Arial 22 bold')
+        lbl_end_game3.place(x=100, y=300)
+
+    # και εδω τυπωνω το score του παιχτη
     lbl_end_game = ttk.Label(parent, text='Game Score', font='Arial 20 bold')
     lbl_end_game.place(x=420, y=30)
-    lbl_end_game2 = ttk.Label(parent, text='Your Score is' + " " + str(final_score) + " !!!!!", font='Arial 16 bold')
+    lbl_end_game2 = ttk.Label(parent, text='Your Score is' + " " + str(score_is) + " !!!!!", font='Arial 16 bold')
     lbl_end_game2.place(x=400, y=100)
-    return final_score
+    # εδω τα εισαγω στην βαση
+    number_id = game_number
+    insert_high_score(game_score[0]['name'], game_score[0]['category'], game_score[0]['difficulty'], number_id,
+                      time_is, correct_is, wrong_is, score_is)
 
 
 open_db_table()
