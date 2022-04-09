@@ -72,10 +72,6 @@ def frame_play_hide():
 
 def frame_game_score_show():
     frame_game_score.place(y=100, height=window_height - 160, width=window_width)
-    infos = get_user_data(frame_user_data)
-    At = [5, 7, 5, 8, 1, 6, 7, 8, 9]
-    c = [1, 1, 1, 1, 1, 1, 1, 1, 1]
-    show_game_score(frame_game_score, c, infos[2], At)
 
 
 def frame_game_score_hide():
@@ -103,11 +99,6 @@ def play_game():
 
 def end_game():
     frame_play_hide()
-    infos = get_user_data(frame_user_data)
-    At = [5, 3, 2, 8, 19, 6, 7, 80, 9]
-    c = [1, 1, 1, 1, 1, 1, 1, 1, 1]
-    finalscore = show_game_score(frame_game_score, c, infos[2], At)
-    insert_high_score(infos[0], infos[1], infos[2], 2, 180, 7, 1, finalscore)
     frame_game_score_show()
 
 
