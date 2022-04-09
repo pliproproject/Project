@@ -155,7 +155,7 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, sec
                               message='Θέλετε να συνεχίσετε το παιχνίδι;')
             if answer:
                 get_questions(1, 1)
-                play(qa, frame_play, frame_top, frame_bottom)
+                play(qa, frame_play, frame_top, frame_bottom, frame_game_score)
                 game_end = False
     if game_end:
         show_game_score(frame_game_score, game_score)
@@ -166,7 +166,7 @@ def stop_countdown():
     stop_threads = True
 
 
-def countdown(parent, second, qa, frame_play, frame_top, frame_bottom):
+def countdown(parent, second, qa, frame_play, frame_top, frame_bottom, frame_game_score):
     temp = int(second.get())
     while temp > -1:
         secs = temp
@@ -178,7 +178,7 @@ def countdown(parent, second, qa, frame_play, frame_top, frame_bottom):
         time.sleep(1)
         if temp == 0:
             messagebox.showinfo("Τέλος", "Η χρόνος έληξε! ")
-            check_answers(qa, frame_play, frame_top, frame_bottom, 0)
+            check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, 0)
         global stop_threads
         if stop_threads:
             break
@@ -216,7 +216,7 @@ def play(qa, parent, frame_top, frame_bottom, frame_game_score):
     seconds = tk.Label(frame_top, width=3, font=("Arial", 18, ""), bg='lightgray', fg='red', textvariable=second)
     seconds.place(x=950, y=30)
     # threading.Thread(target=lambda: countdown(frame_top, second, qa, parent, frame_top, frame_bottom)).start()
-    t = threading.Thread(target=lambda: countdown(frame_top, second, qa, parent, frame_top, frame_bottom))
+    t = threading.Thread(target=lambda: countdown(frame_top, second, qa, parent, frame_top, frame_bottom, frame_game_score))
     t.daemon = True
     t.start()
 
