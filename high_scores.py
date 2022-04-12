@@ -146,8 +146,6 @@ def show_game_score(parent, game_score):
         wrong_is = game_score[game_number]['wrong']
         correct_is = game_score[game_number]['correct']
         time_is = game_score[game_number]['time']
-
-
     else:
         for number in range(0, game_number):
             score_is += game_score[number]['score']
@@ -160,18 +158,15 @@ def show_game_score(parent, game_score):
     c = sqlite_connection.cursor()
     with sqlite_connection:
         c.execute("SELECT * FROM highscore ORDER BY score DESC LIMIT 10")
-        items = [c.fetchall()]
+        items = c.fetchall()
 
     # εδω κοιταω για το εαν εκανε high score ο παιχτης
     count = 0
-    i = 0
+    if not items:
+        count += 1
     for score in items:
-        if not score:
+        if score_is > score[8] or len(items) <= 9:
             count += 1
-            break
-        elif score_is > score[i][8] or len(score) < 11:
-            count += 1
-        i += 1
 
     # κλεινω την βαση
     sqlite_connection.close()
@@ -187,8 +182,7 @@ def show_game_score(parent, game_score):
     lbl_end_game2 = ttk.Label(parent, text='Your Score is' + " " + str(score_is) + " !!!!!", font='Arial 16 bold')
     lbl_end_game2.place(x=400, y=100)
     # εδω τα εισαγω στην βαση
-    number_id = game_number
-    insert_high_score(game_score[0]['name'], game_score[0]['category'], game_score[0]['difficulty'], number_id,
+    insert_high_score(game_score[0]['name'], game_score[0]['category'], game_score[0]['difficulty'], game_number,
                       time_is, correct_is, wrong_is, score_is)
 
 
