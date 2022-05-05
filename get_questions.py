@@ -26,9 +26,52 @@ def get_questions(category, difficulty):
 
 
 def get_user_data(parent):
-    player = 'Player'
+    player = input("Δώσε το όνομά σου: ")
+
+    category_list = [
+        ["General Knowledge"],
+        ["Entertainment: Books"],
+        ["Entertainment: Film"],
+        ["Entertainment: Music"],
+        ["Entertainment: Musicals & Theatres"],
+        ["Entertainment: Television"],
+        ["Entertainment: Video Games"],
+        ["Entertainment: Board Games"],
+        ["Science & Nature"],
+        ["Science: Computers"],
+        ["Science: Mathematics"],
+        ["Mythology"],
+        ["Sports"],
+        ["Geography"],
+        ["History"],
+        ["Politics"],
+        ["Art"],
+        ["Celebrities"],
+        ["Animals"],
+        ["Vehicles"],
+        ["Entertainment: Comics"],
+        ["Science: Gadgets"],
+        ["Entertainment: Japanese Anime & Manga"],
+        ["Entertainment: Cartoon & Animations"]]
+
+    category = input('Επέλεξε κατηγορία ερωτήσεων: ' + str(category_list) + ": ")
+    id_ = ()
+    if category in category_list:
+        id_ = len(category_list) + 9
+        print(id_)
+
+    difficulty = input('Επέλεξε βαθμό δυσκολίας [Easy], [Medium], [Hard]: ')
+    if difficulty == 'Easy':
+        difficulty = 'easy'
+    elif difficulty == 'Medium':
+        difficulty = 'medium'
+    elif difficulty == 'Hard':
+        difficulty = 'hard'
+
+    api_link = 'https://opentdb.com/api.php?amount=9&category='
+    print(api_link + str(id_) + '&difficulty=' + str(difficulty))
+
     lbl_player = ttk.Label(parent, text='get user name, category, difficulty frame', font='Arial 12 bold')
     lbl_player.place(x=10, y=10)
-    category = 'category 1'
-    difficulty = "easy"
+
     return [player, category, difficulty]
