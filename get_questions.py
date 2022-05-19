@@ -1,10 +1,6 @@
-from tkinter import ttk
-from urllib import response
 import requests
-import json
+def get_questions(url,params):
 
-
-def get_questions(category, difficulty):
     qa = [
         {"question": "Which company was established on April 1st, 1976 by Steve Jobs, Steve Wozniak and Ronald Wayne?",
          "correct_answer": "Apple", "incorrect_answers": ["Microsoft", "Atari", "Commodore"]},
@@ -25,37 +21,13 @@ def get_questions(category, difficulty):
          "incorrect_answers": ["True"]},
         {"question": "The NVidia GTX 1080 gets its name because it can only render at a 1920x1080 screen resolution.",
          "correct_answer": "False", "incorrect_answers": ["True"]}]
-    return qa
+    #Εκτελεί την αίτηση GET προς τον δικτυακό τόπο opentdb.com
+    resp = requests.get(url=url, params=params)
+    #Επιστρέφει την απάντηση της αίτησης (request) σε μορφή dict
+    data = resp.json()
 
+    print(data['results'])
+  #  play(qa, frame_play, frame_top, frame_bottom, frame_game_score)
+  #  return data['results']
+    return data
 
-def get_user_data(parent):
-    player = input("Δώσε το όνομά σου: ")
-
-    # Κατηγορία
-    category_link = requests.get('https://opentdb.com/api_category.php')
-    print(category_link.json())
-
-    category = int(input('Επέλεξε κατηγορία ερωτήσεων 9 - 32: '))
-
-    id_ = 0
-    if category >= 9:
-        if category <= 32:
-            id_ = category
-
-    # Επίπεδο Δυσκολίας
-    difficulty = input('Επέλεξε βαθμό δυσκολίας [Easy], [Medium], [Hard]: ')
-    if difficulty == 'Easy':
-        difficulty = 'easy'
-    elif difficulty == 'Medium':
-        difficulty = 'medium'
-    elif difficulty == 'Hard':
-        difficulty = 'hard'
-
-    # Τελική μορφή API Link
-    api_link = 'https://opentdb.com/api.php?amount=9&category='
-    print(api_link + str(id_) + '&difficulty=' + str(difficulty))
-
-    lbl_player = ttk.Label(parent, text='get user name, category, difficulty frame', font='Arial 12 bold')
-    lbl_player.place(x=10, y=10)
-
-    return [player, category, difficulty]

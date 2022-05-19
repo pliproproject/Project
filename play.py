@@ -6,15 +6,20 @@ import random
 import time
 import threading
 from time import perf_counter
+from turtle import left
+from tkinter import PhotoImage
+# import requests
 
-from get_questions import get_questions
+# from get_questions import get_questions
 from high_scores import show_game_score
+from get_questions import get_questions
 
 time_start = 0
 game_duration = 180
 stop_threads = False
 game_score = []
 game_number = 0
+url = "https://opentdb.com/api.php"
 
 
 def viewing_time():
@@ -22,6 +27,7 @@ def viewing_time():
     return int((perf_counter() - time_start) * 100)
 
 
+# εμφανίζει το label με τον χρόνο που πήρε στον παίκτη να απαντήσει την τρέχουσα ερώτηση (current_que)
 def show_time_to_answer(qa, current_que, frame_top):
     tta = StringVar()
     lbl_time_to_answer = tk.Label(frame_top, textvariable=tta, fg="black", bg="lightgray", font="Arial 18")
@@ -74,7 +80,9 @@ def last_question(parent, qa, current_que, frame_top):
     show_question(parent, qa, current_que, frame_top)
 
 
+# Η παρακάτω συνάρτηση εμφανίζει την ερώτηση current_que στον παίκτη
 def show_question(parent, qa, current_que, frame_top):
+    # Η μεταβλητή time_start κρατάει το χρόνο που άρχισε να βλέπει την ερώτηση ο παίκτης
     global time_start
     time_start = perf_counter()
     show_time_to_answer(qa, current_que, frame_top)
@@ -112,12 +120,11 @@ def show_question(parent, qa, current_que, frame_top):
     return
 
 
-def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, second):
+def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, second, params, username):
     global game_number
     global game_score
     global game_duration
     # counter_label(lbl, False)
-
     score = 0
     difficulty = 1
     not_answered = 1
@@ -125,8 +132,8 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, sec
           'time': 0}
     game_score.append(gs)
     game_score[game_number]['time'] = game_duration - int(second.get())
-    game_score[game_number]['name'] = 'Παίκτης 1'
-    game_score[game_number]['difficulty'] = difficulty
+    game_score[game_number]['name'] = username
+    game_score[game_number]['difficulty'] = params['difficulty']
     game_score[game_number]['category'] = 'Science'
     for que in range(0, len(qa)):
         # Μετράει τις μη απαντημένες ερωτήσεις
@@ -154,8 +161,8 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, sec
             answer = askyesno(title='Επόμενο set ερωτήσεων',
                               message='Θέλετε να συνεχίσετε το παιχνίδι;')
             if answer:
-                get_questions(1, 1)
-                play(qa, frame_play, frame_top, frame_bottom, frame_game_score)
+                # get_questions(url, params)
+                play(frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, params, username)
                 game_end = False
     if game_end:
         show_game_score(frame_game_score, game_score)
@@ -166,7 +173,8 @@ def stop_countdown():
     stop_threads = True
 
 
-def countdown(parent, second, qa, frame_play, frame_top, frame_bottom, frame_game_score):
+def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, url, params):
+    global stop_threads
     temp = int(second.get())
     while temp > -1:
         secs = temp
@@ -174,59 +182,64 @@ def countdown(parent, second, qa, frame_play, frame_top, frame_bottom, frame_gam
         second.set("{0:3d}".format(secs))
         # updating the GUI window after decrementing the
         # temp value every time
-        parent.update()
+        # parent.update()
         time.sleep(1)
         if temp == 0:
             messagebox.showinfo("Τέλος", "Η χρόνος έληξε! ")
-            check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, 0)
-        global stop_threads
+            check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, second, params)
         if stop_threads:
             break
         # after every one sec the value of temp will be decremented by one
         temp -= 1
 
 
-# counter = 0
-# running = False
-
-
-# def counter_label(lbl, running):
-#     def count():
-#         if running:
-#             global counter
-#             if counter == 0:
-#                 display = "0"
-#             else:
-#                 display = str(counter)
-#             lbl_time_to_answer['text'] = display
-#             lbl.after(10, count)
-#             counter += 1
-#     count()
-
-
-def play(qa, parent, frame_top, frame_bottom, frame_game_score):
+def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, params, username):
     global stop_threads
+    stop_threads = False
+    # κάνει hidden το frame που έγινε η εισαγωγή των στοιχείων του παίκτη
+    frame_user_data.place_forget()
+    # καλεί την get_questions με παραμέτρους το url, την επιλεγμένη από τον παίχτη κατηγορία και το επίπεδο δυσκολίας
+    jsondata = get_questions(url, params)
+    qa = jsondata['results']
+
+    parent.place(y=100, height=768 - 160, width=1024)
     second = StringVar()
     second.set("180")
+    print('params=', params)
     # lbl_time_to_answer = tk.Label(frame_top, text="00", fg="black", bg="yellow", font="Verdana 30 bold")
     # lbl_time_to_answer.place(x=10, y=30)
     # counter_label(lbl, True)
+
     tk.Label(frame_top, font=("Arial", 18, ""), bg='lightgray', text='Χρόνος απάντησης:').place(x=10, y=30)
     tk.Label(frame_top, font=("Arial", 18, ""), bg='lightgray', text='Χρόνος:').place(x=860, y=30)
+    # Φτιάχνω ένα label που εμφανίζει το χρόνο που έχει απομείνει
     seconds = tk.Label(frame_top, width=3, font=("Arial", 18, ""), bg='lightgray', fg='red', textvariable=second)
     seconds.place(x=950, y=30)
-    # threading.Thread(target=lambda: countdown(frame_top, second, qa, parent, frame_top, frame_bottom)).start()
-    t = threading.Thread(target=lambda: countdown(frame_top, second, qa, parent, frame_top, frame_bottom, frame_game_score))
+    # Καλώ τη συνάρτηση countdown που μετράει το χρόνο που απομένει μέχρι το τέλος του παιχνιδιού
+    # Η συνάρτηση καλείται σε διαφορετικό thread. Αν την καλέσω στο ίδιο thread σταματάει η εκτέλεση του υπόλοιπου
+    # προγράμματος μέχρι να περάσουν τα 180sec και συνεχίζει μετά.
+    t = threading.Thread(
+        target=lambda: countdown(second, qa, parent, frame_top, frame_bottom, frame_game_score, frame_user_data, url,
+                                 params))
     t.daemon = True
     t.start()
 
     # Η παρακάτω εντολή ανακατεύει τη σειρά των ερωτήσεων
     random.shuffle(qa)
-    # φτιάχνει 2 κλειδιά στο λεξικό κάθε ερώτησης, την απάντηση του παίκτη με τιμή -1 το χρόνο εμφάνισης κάθε
+    # φτιάχνει 4 κλειδιά στο λεξικό κάθε ερώτησης, όλες τις απαντήσεις, την απάντηση του παίκτη, το χρόνο εμφάνισης κάθε
     # ερώτησης και το χρόνο απάντησης με τιμή 0
     for q in qa:
+        # εδώ αντικαθιστώ τα &quot; με " και το &#039; με ' στις ερωτήσεις και απαντήσεις
+        question = q['question']
+        q['question'] = (question.replace('&quot;', '"')).replace("&#039;", "'")
+        ca = q['correct_answer']
+        ca = (ca.replace('&quot;', '"')).replace("&#039;", "'")
+        ia = q['incorrect_answers']
+        for i in range(0, len(ia)):
+            ia[i] = (ia[i].replace('&quot;', '"')).replace("&#039;", "'")
         # καταχωρεί τη σωστή και τις λανθασμένες απαντήσεις κάθε ερώτησης στη λίστα answers
-        answers = [q['correct_answer'], *q['incorrect_answers']]
+        # ???????
+        answers = [ca, *ia]
         # ανακατεύει τις απαντήσεις
         random.shuffle(answers)
         # τις ανακατεμένες απαντήσεις τις καταχωρεί στο λεξικό κάθε ερώτησης
@@ -240,19 +253,23 @@ def play(qa, parent, frame_top, frame_bottom, frame_game_score):
     current_que = [0]
     #   p2 = Process(target=show_question(parent, qa, current_que))
     #   p2.start()
+    # καλεί τη show_question με παράμετρο την current_que ώστε να εμφανίσει την 1η ερώτηση στον παίκτη
     show_question(parent, qa, current_que, frame_top)
-    ttk.Button(frame_bottom, text="check",
-               command=lambda: [stop_countdown(), check_answers(qa, parent, frame_top, frame_bottom,
-                                                                frame_game_score, second)]).place(x=800, y=20)
-    ttk.Button(frame_bottom, text="next question",
-               command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550,
-                                                                                        y=1)
-    ttk.Button(frame_bottom, text="prev question",
-               command=lambda: prev_question(parent, qa, current_que, frame_top)).place(x=550,
-                                                                                        y=30)
-    ttk.Button(frame_bottom, text="1st question",
-               command=lambda: first_question(parent, qa, current_que, frame_top)).place(x=650,
-                                                                                         y=1)
-    ttk.Button(frame_bottom, text="last question",
-               command=lambda: last_question(parent, qa, current_que, frame_top)).place(x=650,
-                                                                                        y=30)
+    # Παρακάτω, φτιάχνω τα buttons που βρίσκονται στο button frame τα οποία είναι:
+    # Ολοκλήρωση παιχνιδιού, επόμενη, προηγούμενη, 1η τελευταία ερώτηση
+    # Χρησιμοποιώ lambda συναρτήσεις γιατί στο button "ολοκλήρωση παιχνιδιού" θα πρέπει πρώτα να καλέσω τη
+    # stop_countdown ώστε να σταματήσει το thread με τη μέτρηση του χρόνου. Στις υπόλοιπες είναι απαραίτητο επειδή
+    # καλώ με πολλά ορίσματα τις συναρτήσεις στο onclick event
+    ttk.Button(frame_bottom, text="Έλεγχος Απαντήσεων",
+               command=lambda: [stop_countdown(),
+                                check_answers(qa, parent, frame_top, frame_bottom, frame_game_score, frame_user_data,
+                                              second, params, username)]).place(x=750, y=20)
+    ttk.Button(frame_bottom, text=">",
+               command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550, y=20)
+    ttk.Button(frame_bottom, text="<",
+               command=lambda: prev_question(parent, qa, current_que, frame_top)).place(x=450, y=20)
+    ttk.Button(frame_bottom, text="<<",
+               command=lambda: first_question(parent, qa, current_que, frame_top)).place(x=350, y=20)
+    ttk.Button(frame_bottom, text=">>",
+               command=lambda: last_question(parent, qa, current_que, frame_top)).place(x=650, y=20)
+
