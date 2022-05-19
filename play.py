@@ -30,8 +30,8 @@ def viewing_time():
 # εμφανίζει το label με τον χρόνο που πήρε στον παίκτη να απαντήσει την τρέχουσα ερώτηση (current_que)
 def show_time_to_answer(qa, current_que, frame_top):
     tta = StringVar()
-    lbl_time_to_answer = tk.Label(frame_top, textvariable=tta, fg="black", bg="lightgray", font="Arial 18")
-    lbl_time_to_answer.place(x=230, y=30)
+    lbl_time_to_answer = tk.Label(frame_top, textvariable=tta, fg="black", bg="lightgray", font="Arial 14")
+    lbl_time_to_answer.place(x=280, y=30)
     print("currentq=", current_que[0], "time to answer=", qa[current_que[0]]['time_to_answer'])
     tta.set(str(qa[current_que[0]]['time_to_answer']).zfill(6))
 
@@ -210,7 +210,7 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, par
     # lbl_time_to_answer.place(x=10, y=30)
     # counter_label(lbl, True)
 
-    tk.Label(frame_top, font=("Arial", 18, ""), bg='lightgray', text='Χρόνος απάντησης:').place(x=10, y=30)
+    tk.Label(frame_top, font=("Arial", 14, ""), bg='lightgray', text='Χρόνος απάντησης (1/100 sec):').place(x=10, y=30)
     tk.Label(frame_top, font=("Arial", 18, ""), bg='lightgray', text='Χρόνος:').place(x=860, y=30)
     # Φτιάχνω ένα label που εμφανίζει το χρόνο που έχει απομείνει
     seconds = tk.Label(frame_top, width=3, font=("Arial", 18, ""), bg='lightgray', fg='red', textvariable=second)
