@@ -30,8 +30,8 @@ def viewing_time():
 # εμφανίζει το label με τον χρόνο που πήρε στον παίκτη να απαντήσει την τρέχουσα ερώτηση (current_que)
 def show_time_to_answer(qa, current_que, frame_top):
     tta = StringVar()
-    lbl_time_to_answer = tk.Label(frame_top, textvariable=tta, fg="black", bg="lightgray", font="Arial 14")
-    lbl_time_to_answer.place(x=280, y=30)
+    lbl_time_to_answer = tk.Label(frame_top, textvariable=tta, fg="black", bg="lightgray", font="Arial 12")
+    lbl_time_to_answer.place(x=125, y=30)
     print("currentq=", current_que[0], "time to answer=", qa[current_que[0]]['time_to_answer'])
     tta.set(str(qa[current_que[0]]['time_to_answer']).zfill(6))
 
@@ -210,10 +210,11 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, par
     # lbl_time_to_answer.place(x=10, y=30)
     # counter_label(lbl, True)
 
-    tk.Label(frame_top, font=("Arial", 14, ""), bg='lightgray', text='Χρόνος απάντησης (1/100 sec):').place(x=10, y=30)
-    tk.Label(frame_top, font=("Arial", 18, ""), bg='lightgray', text='Χρόνος:').place(x=860, y=30)
+    tk.Label(frame_top, font=("Arial", 12, ""), bg='lightgray', text='Time to answer:').place(x=10, y=30)
+    tk.Label(frame_top, font=("Arial", 8, ""), bg='lightgray', text='(1/100 sec)').place(x=10, y=50)
+    tk.Label(frame_top, font=("Arial", 14, ""), bg='lightgray', text='Time left:').place(x=870, y=30)
     # Φτιάχνω ένα label που εμφανίζει το χρόνο που έχει απομείνει
-    seconds = tk.Label(frame_top, width=3, font=("Arial", 18, ""), bg='lightgray', fg='red', textvariable=second)
+    seconds = tk.Label(frame_top, width=3, font=("Arial", 14, ""), bg='lightgray', fg='red', textvariable=second)
     seconds.place(x=950, y=30)
     # Καλώ τη συνάρτηση countdown που μετράει το χρόνο που απομένει μέχρι το τέλος του παιχνιδιού
     # Η συνάρτηση καλείται σε διαφορετικό thread. Αν την καλέσω στο ίδιο thread σταματάει η εκτέλεση του υπόλοιπου
@@ -260,10 +261,10 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, par
     # Χρησιμοποιώ lambda συναρτήσεις γιατί στο button "ολοκλήρωση παιχνιδιού" θα πρέπει πρώτα να καλέσω τη
     # stop_countdown ώστε να σταματήσει το thread με τη μέτρηση του χρόνου. Στις υπόλοιπες είναι απαραίτητο επειδή
     # καλώ με πολλά ορίσματα τις συναρτήσεις στο onclick event
-    ttk.Button(frame_bottom, text="Έλεγχος Απαντήσεων",
+    ttk.Button(frame_bottom, text="End Game",
                command=lambda: [stop_countdown(),
                                 check_answers(qa, parent, frame_top, frame_bottom, frame_game_score, frame_user_data,
-                                              second, params, username)]).place(x=750, y=20)
+                                              second, params, username)]).place(x=150, y=20)
     ttk.Button(frame_bottom, text=">",
                command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550, y=20)
     ttk.Button(frame_bottom, text="<",

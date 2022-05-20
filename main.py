@@ -61,12 +61,12 @@ def play_game():
 
 
 def end_game():
-    btn_start["state"] = NORMAL
     frame_play_hide()
     frame_game_score_show()
 
 
 def high_scores():
+    btn_start["state"] = NORMAL
     frame_user_data_hide()
     frame_game_score_hide()
     frame_hi_scores_show()
@@ -141,19 +141,19 @@ if __name__ == '__main__':
     # Έχω βάλει προς το παρόν buttons ια να κάνουμε τις εναλλαγές από τη μια κατάσταση στην άλλη κάποια από αυτά θα
     # φύγουν. Για παράδειγμα, από τη splash screen θα φεύγει μετά από κάποια δευτερόλεπτα ή μετά από click
     # exit button
-    btn_exit = ttk.Button(frame_bottom, text='Έξοδος', command=root.destroy)
+    btn_exit = ttk.Button(frame_bottom, text='Exit', command=root.destroy)
     btn_exit.place(x=window_width - 100, y=20)
     # start new game button (ask username etc.)
-    btn_start = ttk.Button(frame_bottom, text="Νέο Παιχνίδι", command=start_new_game, state=NORMAL)
+    btn_start = ttk.Button(frame_bottom, text="Start New Game", command=start_new_game, state=NORMAL)
     btn_start.place(x=30, y=20)
 
     # game end-score button
-    btn_end_game = ttk.Button(frame_bottom, text="4. End Game", command=end_game)
-    btn_end_game.place(x=150, y=20)
+    btn_end_game = ttk.Button(frame_bottom, text="(4. End Game)", command=end_game)
+    btn_end_game.place(x=250, y=10)
 
     # Hi-score button
-    btn_hi_scores2 = ttk.Button(frame_bottom, text="5. hi scores", command=high_scores)
-    btn_hi_scores2.place(x=250, y=20)
+    btn_hi_scores2 = ttk.Button(frame_bottom, text="(5. hi scores)", command=high_scores)
+    btn_hi_scores2.place(x=250, y=30)
 
     exit_splash()
 
