@@ -168,12 +168,12 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
                 play(frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, params, username)
                 game_end = False
     if game_end:
-        show_game_score(frame_game_score, game_score)
-        game_score.clear()
-        game_number = 0
         # Κάνει hidden το play_frame
         frame_play.place_forget()
         frame_game_score.place(y=100, height=768 - 160, width=1024)
+        show_game_score(frame_game_score, game_score)
+        game_score.clear()
+        game_number = 0
 
 
 def stop_countdown():
@@ -199,6 +199,7 @@ def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score,
             break
         # after every one sec the value of temp will be decremented by one
         temp -= 1
+
 
 def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, params, username, category):
     global stop_threads
