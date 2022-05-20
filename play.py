@@ -166,6 +166,11 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
                 game_end = False
     if game_end:
         show_game_score(frame_game_score, game_score)
+        game_score.clear()
+        game_number = 0
+        # Κάνει hidden το play_frame
+        frame_play.place_forget()
+        frame_game_score.place(y=100, height=768 - 160, width=1024)
 
 
 def stop_countdown():
