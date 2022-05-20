@@ -98,7 +98,7 @@ def create_splash_screen():
     splash_root.update()
     # root.title("Main Window")
     ## μετά από 3 secs τη σκοτώνει
-    time.sleep(3)
+    time.sleep(5)
     ## σκοτώνει τη splash
     splash_root.destroy()
 
