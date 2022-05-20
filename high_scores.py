@@ -3,6 +3,9 @@ from tkinter import *
 from tkinter import ttk
 import sqlite3
 import datetime
+from PIL import Image, ImageTk, ImageSequence
+import time
+
 
 
 def open_db_table():
@@ -174,7 +177,7 @@ def show_game_score(parent, game_score):
     if count > 0:
         lbl_end_game3 = ttk.Label(parent, text='ΣΥΓΧΑΡΗΤΗΡΙΑ ΠΕΤΥΧΕΣ HIGH SCORE !!! ΜΠΡΑΒΟ !!!!' + "\N{trophy}" +
                                                "\N{trophy}", font='Arial 22 bold')
-        lbl_end_game3.place(x=100, y=300)
+        lbl_end_game3.place(x=100, y=150)
 
     # και εδω τυπωνω το score του παιχτη
     lbl_end_game = ttk.Label(parent, text='Game Score', font='Arial 20 bold')
@@ -184,6 +187,22 @@ def show_game_score(parent, game_score):
     # εδω τα εισαγω στην βαση
     insert_high_score(game_score[0]['name'], game_score[0]['category'], game_score[0]['difficulty'], game_number,
                       time_is, correct_is, wrong_is, score_is)
+    if count > 0:
+        play_gif(parent, 250, 200)
+
+
+def play_gif(parent, x, y):
+    img = Image.open("fireworkds5.gif")
+
+    lbl = Label(parent)
+    lbl.place(x=x, y=y)
+    for img in ImageSequence.Iterator(img):
+        img = ImageTk.PhotoImage(img)
+        lbl.config(image=img)
+
+        parent.update()
+        time.sleep(0.01)
+    parent.after(0, play_gif(parent, x, y))
 
 
 open_db_table()

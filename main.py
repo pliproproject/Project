@@ -4,7 +4,6 @@ from time import sleep
 from game_start import *
 from high_scores import *
 from play import *
-
 appname = "doYouKnow?"
 
 
@@ -136,7 +135,7 @@ if __name__ == '__main__':
     frame_hi_scores = tk.Frame(root, bg='gainsboro')
     frame_user_data = tk.Frame(root, bg='whitesmoke')
     frame_play = tk.Frame(root, bg='white')
-    frame_game_score = tk.Frame(root, bg='azure')
+    frame_game_score = tk.Frame(root, bg='#f0f0f0')
     frame_bottom = tk.Frame(root, bg='lightgrey')
     frame_bottom.place(y=708, height=60, width=window_width)
     # Έχω βάλει προς το παρόν buttons ια να κάνουμε τις εναλλαγές από τη μια κατάσταση στην άλλη κάποια από αυτά θα
