@@ -126,6 +126,7 @@ def show_high_scores(parent):
 
 
 def show_splash_screen(parent):
+    #  αρχικοποιηση του mixer module
     pygame.mixer.init()
     # splash screen labels
     lbl_splash = ttk.Label(parent, text='THE CREATORS', font='Arial 18 bold')
@@ -136,7 +137,9 @@ def show_splash_screen(parent):
     lbl_splash3.place(x=415, y=200)
     lbl_splash4 = ttk.Label(parent, text='Συμεών Βουτέρος', font='Arial 16 bold')
     lbl_splash4.place(x=725, y=200)
+    #  φορτωνω την μουσικη
     pygame.mixer.music.load("splash_screen.mp3")
+    # και του λεω ποσες φορες να παιξει το αρχειο της μουσικης
     pygame.mixer.music.play(loops=0)
 
 
