@@ -97,7 +97,7 @@ def create_splash_screen():
     ## required to make window show before the program gets to the mainloop
     splash_root.update()
     # root.title("Main Window")
-    ## μετά από 3 secs τη σκοτώνει
+    ## μετά από 5 secs τη σκοτώνει
     time.sleep(5)
     ## σκοτώνει τη splash
     splash_root.destroy()
@@ -148,8 +148,8 @@ if __name__ == '__main__':
     btn_start.place(x=30, y=20)
 
     # game end-score button
-    btn_end_game = ttk.Button(frame_bottom, text="(4. End Game)", command=end_game)
-    btn_end_game.place(x=250, y=10)
+    #btn_end_game = ttk.Button(frame_bottom, text="(4. End Game)", command=end_game)
+    #btn_end_game.place(x=250, y=10)
 
     # Hi-score button
     btn_hi_scores2 = ttk.Button(frame_bottom, text="(5. hi scores)", command=high_scores)

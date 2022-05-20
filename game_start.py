@@ -2,12 +2,16 @@ from tkinter import *
 import tkinter
 from tkinter.ttk import *
 from play import play
-
+import pygame
 username = ""
 level = ""
 
 
 def get_user_data(parent, frame_play, frame_top, frame_bottom, frame_game_score):
+    pygame.mixer.music.stop()
+    pygame.mixer.init()
+    pygame.mixer.music.load("user_info.mp3")
+    pygame.mixer.music.play(loops=1)
     # λήψη ονόματος παίκτη
     lbl = Label(parent, text="Please type a username:")
     # lbl.grid(column=0, row=0)
