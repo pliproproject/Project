@@ -141,6 +141,7 @@ def show_splash_screen(parent):
 
 
 def show_game_score(parent, game_score):
+    # σταματαω οποιαδηποτε αλλη μουσικη παιζει
     pygame.mixer.music.stop()
     # εδω κοιταω για το ποσες φορες εχει παιξει ο παιχτης και αναλογος βγαζω το αποτελεσμα για το καθενα
     game_number = len(game_score)
@@ -177,11 +178,15 @@ def show_game_score(parent, game_score):
 
     # κλεινω την βαση
     sqlite_connection.close()
-    # αν εκανε high score τυπωνω το αναλογο μυνημα
+
+    #  αρχικοποιηση του mixer module
     pygame.mixer.init()
+    #  φορτωνω την μουσικη
     pygame.mixer.music.load("high_score.mp3")
+    # και του λεω ποσες φορες να παιξει το αρχειο της μουσικης
     pygame.mixer.music.play(loops=3)
     if count > 0:
+        # αν εκανε high score τυπωνω το αναλογο μυνημα
         lbl_end_game3 = ttk.Label(parent, text='ΣΥΓΧΑΡΗΤΗΡΙΑ ΠΕΤΥΧΕΣ HIGH SCORE !!! ΜΠΡΑΒΟ !!!!' + "\N{trophy}" +
                                                "\N{trophy}", font='Arial 22 bold')
         lbl_end_game3.place(x=100, y=150)
