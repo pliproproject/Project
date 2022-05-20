@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import *
 from tkinter import ttk, StringVar
 from tkinter import messagebox
 from tkinter.messagebox import askyesno
@@ -6,6 +7,7 @@ import random
 import time
 import threading
 from time import perf_counter
+from PIL import Image, ImageTk
 from turtle import left
 from tkinter import PhotoImage
 # import requests
@@ -120,7 +122,7 @@ def show_question(parent, qa, current_que, frame_top):
     return
 
 
-def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, second, params, username):
+def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, second, params, username, category):
     global game_number
     global game_score
     global game_duration
@@ -134,7 +136,8 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
     game_score[game_number]['time'] = game_duration - int(second.get())
     game_score[game_number]['name'] = username
     game_score[game_number]['difficulty'] = params['difficulty']
-    game_score[game_number]['category'] = 'Science'
+    game_score[game_number]['category'] = category
+    print('category=',category)
     for que in range(0, len(qa)):
         # Μετράει τις μη απαντημένες ερωτήσεις
         if len(qa[que]['user_answer']) == 0:
@@ -197,8 +200,7 @@ def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score,
         # after every one sec the value of temp will be decremented by one
         temp -= 1
 
-
-def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, params, username):
+def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, params, username, category):
     global stop_threads
     stop_threads = False
     # κάνει hidden το frame που έγινε η εισαγωγή των στοιχείων του παίκτη
@@ -269,7 +271,7 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, par
     ttk.Button(frame_bottom, text="End Game",
                command=lambda: [stop_countdown(),
                                 check_answers(qa, parent, frame_top, frame_bottom, frame_game_score, frame_user_data,
-                                              second, params, username)]).place(x=150, y=20)
+                                              second, params, username, category)]).place(x=150, y=20)
     ttk.Button(frame_bottom, text=">",
                command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550, y=20)
     ttk.Button(frame_bottom, text="<",

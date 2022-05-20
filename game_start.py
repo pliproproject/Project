@@ -109,7 +109,8 @@ def get_user_data(parent, frame_play, frame_top, frame_bottom, frame_game_score)
                 difficulty=level
             )
         # καλεί την play για να αρχίσει το παιχνίδι
-        play(frame_play, frame_top, frame_bottom, frame_game_score, parent, params, username)
+        category = cat.get()
+        play(frame_play, frame_top, frame_bottom, frame_game_score, parent, params, username, category)
 
     btn3 = Button(parent, text="Continue", command=clicked3)
     btn3.place(x=350, y=200)
