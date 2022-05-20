@@ -5,7 +5,7 @@ import sqlite3
 import datetime
 from PIL import Image, ImageTk, ImageSequence
 import time
-
+import pygame
 
 
 def open_db_table():
@@ -126,6 +126,7 @@ def show_high_scores(parent):
 
 
 def show_splash_screen(parent):
+    pygame.mixer.init()
     # splash screen labels
     lbl_splash = ttk.Label(parent, text='THE CREATORS', font='Arial 18 bold')
     lbl_splash.place(x=400, y=30)
@@ -135,6 +136,8 @@ def show_splash_screen(parent):
     lbl_splash3.place(x=415, y=200)
     lbl_splash4 = ttk.Label(parent, text='Συμεών Βουτέρος', font='Arial 16 bold')
     lbl_splash4.place(x=725, y=200)
+    pygame.mixer.music.load("splash_screen.mp3")
+    pygame.mixer.music.play(loops=0)
 
 
 def show_game_score(parent, game_score):
