@@ -68,7 +68,7 @@ def show_high_scores(parent):
         # δημιουργω το tree view για εμφανιση των high_scores
         parent.pack(side=tk.LEFT, padx=90)
 
-        table = ttk.Treeview(parent, columns=(1, 2, 3, 4, 5, 6, 7, 8, 9), show="headings", height="11")
+        table = ttk.Treeview(parent, columns=(1, 2, 3, 4, 5, 6, 7, 8, 9), show="headings", height="10")
         table.column("1", anchor=CENTER, width="80", minwidth="60")
         table.column("2", anchor=CENTER, width="80", minwidth="60")
         table.column("3", anchor=CENTER, width="80", minwidth="60")
