@@ -171,7 +171,7 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
         # Κάνει hidden το play_frame
         frame_play.place_forget()
         frame_game_score.place(y=100, height=768 - 160, width=1024)
-        show_game_score(frame_game_score, game_score)
+        show_game_score(frame_game_score, game_score, frame_hi_scores)
         game_score.clear()
         game_number = 0
 

@@ -204,9 +204,14 @@ def show_game_score(parent, game_score, frame_hi_scores):
                       time_is, correct_is, wrong_is, score_is)
     if count > 0:
         play_gif(parent, 250, 200)
+        parent.place_forget()
+        show_high_scores(frame_hi_scores)
+    else:
+        time.sleep(3)
+        parent.place_forget()
+        show_high_scores(frame_hi_scores)
 
-    parent.place_forget()
-    show_high_scores(frame_hi_scores)
+
 
 
 counteR = 0
