@@ -8,6 +8,7 @@ import time
 import pygame
 from threading import Timer
 
+
 def open_db_table():
     # δημιουργια της βασης και αν υπαρχει απλα την ανοιγει
     sqlite_connection = sqlite3.connect('Trivia_game.db')
@@ -211,13 +212,9 @@ def show_game_score(parent, game_score, frame_hi_scores):
         t.start()
 
 
-
-
-
 def time_sleep(parent, frame_hi_scores):
     parent.place_forget()
     show_high_scores(frame_hi_scores)
-
 
 
 counteR = 0
