@@ -121,7 +121,7 @@ def show_question(parent, qa, current_que, frame_top):
     return
 
 
-def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, second, params, username, category):
+def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_high_scores, second, params, username, category):
     global game_number
     global game_score
     global game_duration
@@ -170,7 +170,7 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
         # Κάνει hidden το play_frame
         frame_play.place_forget()
         frame_game_score.place(y=100, height=768 - 160, width=1024)
-        show_game_score(frame_game_score, game_score)
+        show_game_score(frame_game_score, frame_high_scores, game_score)
         game_score.clear()
         game_number = 0
 
@@ -200,7 +200,8 @@ def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score,
         temp -= 1
 
 
-def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, params, username, category):
+def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_high_scores, params, username, category):
+    url = "https://opentdb.com/api.php"
     global stop_threads
     stop_threads = False
     # κάνει hidden το frame που έγινε η εισαγωγή των στοιχείων του παίκτη
@@ -281,7 +282,7 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, par
     ttk.Button(frame_bottom, text="End Game",
                command=lambda: [stop_countdown(),
                                 check_answers(qa, parent, frame_top, frame_bottom, frame_game_score, frame_user_data,
-                                              second, params, username, category)]).place(x=150, y=20)
+                                              frame_high_scores, second, params, username, category)]).place(x=150, y=20)
     ttk.Button(frame_bottom, text=">",
                command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550, y=20)
     ttk.Button(frame_bottom, text="<",

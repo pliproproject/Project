@@ -7,7 +7,6 @@ from play import *
 import webbrowser  # για το github link
 
 appname = "doYouKnow?"
-url = "https://opentdb.com/api.php"
 
 
 # ------------------------- frame show/hide functions-----------------------------
@@ -58,7 +57,7 @@ def start_new_game():
     btn_start["state"] = DISABLED
     frame_hi_scores_hide()
     frame_user_data_show()
-    get_user_data(frame_user_data, frame_play, frame_top, frame_bottom, frame_game_score)
+    get_user_data(frame_user_data, frame_play, frame_top, frame_bottom, frame_game_score, frame_hi_scores)
 
 
 # η παρακάτω μάλλον δε χρειάζεται πια
