@@ -6,7 +6,7 @@ import random
 import time
 import threading
 from time import perf_counter
-from PIL import ImageTk
+#from PIL import ImageTk
 import pygame
 
 #from tkinter import PhotoImage
@@ -21,7 +21,6 @@ game_duration = 180
 stop_threads = False
 game_score = []
 game_number = 0
-url = "https://opentdb.com/api.php"
 
 
 def viewing_time():
@@ -201,48 +200,18 @@ def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score,
         temp -= 1
 
 
-def about_frame():
-    # Create object
-    about_window = tk.Tk()
-    # Adjust size
-    about_window.geometry("400x400")
-    # Add image file
-    bg = ImageTk.PhotoImage(file="about.png")
-    # Show image using label
-    label = tk.Label(about_window, text='------------------')
-    label1 = tk.Label(about_window, image=bg)
-    label1.place(x=0, y=0)
-    # Add text
-    label2 = tk.Label(about_window, text="Welcome", bg="#88cffa")
-    label2.pack(pady=50)
-    # Create Frame
-    frame1 = tk.Frame(about_window, bg="#88cffa")
-    frame1.pack(pady=20)
-    # Add buttons
-    button1 = ttk.Button(frame1, text="Exit", image=bg)
-    button1.pack(pady=20)
-
-    # Execute tkinter
-    about_window.mainloop()
-
-
-def about(frame_bottom):
-    ttk.Button(frame_bottom, text="?", command=lambda: about_frame()).place(x=800, y=20)
-
-
 def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, params, username, category):
     global stop_threads
-    about(frame_bottom)
     stop_threads = False
     # κάνει hidden το frame που έγινε η εισαγωγή των στοιχείων του παίκτη
     frame_user_data.place_forget()
-    # σταματαω οποιαδηποτε αλλη μουσικη παιζει
+    # σταματάω οποιαδήποτε άλλη μουσική παίζει
     pygame.mixer.music.stop()
-    #  αρχικοποιηση του mixer module
+    #  αρχικοποίηση του mixer module
     pygame.mixer.init()
-    #  φορτωνω την μουσικη
+    #  φορτώνω τη μουσική
     pygame.mixer.music.load("play.mp3")
-    # και του λεω ποσες φορες να παιξει το αρχειο της μουσικης
+    # και του λεω ποίες φορές να παίξει το αρχείο της μουσικής
     pygame.mixer.music.play(loops=1)
 
 

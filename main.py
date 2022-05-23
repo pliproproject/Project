@@ -4,7 +4,10 @@ from time import sleep
 from game_start import *
 from high_scores import *
 from play import *
+import webbrowser  # για το github link
+
 appname = "doYouKnow?"
+url = "https://opentdb.com/api.php"
 
 
 # ------------------------- frame show/hide functions-----------------------------
@@ -39,6 +42,10 @@ def frame_game_score_show():
 
 def frame_game_score_hide():
     frame_game_score.place_forget()
+
+
+def show_about_frame():
+    frame_about.place(x=183, y=100, height=470, width=657)
 
 
 # ----------------------------------------------------------------------------------
@@ -138,6 +145,17 @@ if __name__ == '__main__':
     frame_game_score = tk.Frame(root, bg='#f0f0f0')
     frame_bottom = tk.Frame(root, bg='lightgrey')
     frame_bottom.place(y=708, height=60, width=window_width)
+    # Δημιουργεί το about frame για να είναι έτοιμο
+    frame_about = tk.Frame(root, bg='white')
+    img = ImageTk.PhotoImage(Image.open("about.png"))
+    label = Label(frame_about, image=img)
+    label.pack()
+    githublink = Label(frame_about, text="github link", fg="blue", bg="white", cursor="hand2")
+    githublink.place(x=20, y=440)
+    githublink.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/pliproproject/Project"))
+    btn_exit_about = ttk.Button(frame_about, text='OK', command=lambda: frame_about.place_forget())
+    btn_exit_about.place(x=580, y=440)
+
     # Έχω βάλει προς το παρόν buttons ια να κάνουμε τις εναλλαγές από τη μια κατάσταση στην άλλη κάποια από αυτά θα
     # φύγουν. Για παράδειγμα, από τη splash screen θα φεύγει μετά από κάποια δευτερόλεπτα ή μετά από click
     # exit button
@@ -148,12 +166,15 @@ if __name__ == '__main__':
     btn_start.place(x=30, y=20)
 
     # game end-score button
-    #btn_end_game = ttk.Button(frame_bottom, text="(4. End Game)", command=end_game)
-    #btn_end_game.place(x=250, y=10)
+    # btn_end_game = ttk.Button(frame_bottom, text="(4. End Game)", command=end_game)
+    # btn_end_game.place(x=250, y=10)
 
     # Hi-score button
     btn_hi_scores2 = ttk.Button(frame_bottom, text="(5. hi scores)", command=high_scores)
     btn_hi_scores2.place(x=250, y=30)
+
+    btn_about = ttk.Button(frame_bottom, text="About", command=lambda: show_about_frame())
+    btn_about.place(x=800, y=20)
 
     exit_splash()
 
