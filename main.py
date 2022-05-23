@@ -169,8 +169,8 @@ if __name__ == '__main__':
     # btn_end_game.place(x=250, y=10)
 
     # Hi-score button
-    btn_hi_scores2 = ttk.Button(frame_bottom, text="(5. hi scores)", command=high_scores)
-    btn_hi_scores2.place(x=250, y=30)
+    #btn_hi_scores2 = ttk.Button(frame_bottom, text="(5. hi scores)", command=high_scores)
+    #btn_hi_scores2.place(x=250, y=30)
 
     btn_about = ttk.Button(frame_bottom, text="About", command=lambda: show_about_frame())
     btn_about.place(x=800, y=20)

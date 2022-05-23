@@ -143,7 +143,7 @@ def show_splash_screen(parent):
     pygame.mixer.music.play(loops=0)
 
 
-def show_game_score(parent, game_score):
+def show_game_score(parent, game_score, frame_hi_scores):
     # σταματαω οποιαδηποτε αλλη μουσικη παιζει
     pygame.mixer.music.stop()
     # εδω κοιταω για το ποσες φορες εχει παιξει ο παιχτης και αναλογος βγαζω το αποτελεσμα για το καθενα
@@ -205,8 +205,17 @@ def show_game_score(parent, game_score):
     if count > 0:
         play_gif(parent, 250, 200)
 
+    parent.place_forget()
+    show_high_scores(frame_hi_scores)
 
+
+counteR = 0
 def play_gif(parent, x, y):
+    global counteR
+
+    if counteR > 63:
+        return
+
     img = Image.open("fireworkds5.gif")
 
     lbl = Label(parent)
@@ -214,6 +223,8 @@ def play_gif(parent, x, y):
     for img in ImageSequence.Iterator(img):
         img = ImageTk.PhotoImage(img)
         lbl.config(image=img)
+        counteR += 1
+        print(counteR)
 
         parent.update()
         time.sleep(0.01)
