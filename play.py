@@ -6,7 +6,7 @@ import random
 import time
 import threading
 from time import perf_counter
-#from PIL import ImageTk
+from PIL import ImageTk
 import pygame
 
 #from tkinter import PhotoImage
@@ -21,6 +21,7 @@ game_duration = 180
 stop_threads = False
 game_score = []
 game_number = 0
+url = "https://opentdb.com/api.php"
 
 
 def viewing_time():
@@ -121,7 +122,7 @@ def show_question(parent, qa, current_que, frame_top):
     return
 
 
-def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_high_scores, second, params, username, category):
+def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, second, params, username, category):
     global game_number
     global game_score
     global game_duration
@@ -164,13 +165,13 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
                               message='Θέλετε να συνεχίσετε το παιχνίδι;')
             if answer:
                 # get_questions(url, params)
-                play(frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, params, username)
+                play(frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, params, username)
                 game_end = False
     if game_end:
         # Κάνει hidden το play_frame
         frame_play.place_forget()
         frame_game_score.place(y=100, height=768 - 160, width=1024)
-        show_game_score(frame_game_score, frame_high_scores, game_score)
+        show_game_score(frame_game_score, game_score)
         game_score.clear()
         game_number = 0
 
@@ -199,20 +200,18 @@ def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score,
         # after every one sec the value of temp will be decremented by one
         temp -= 1
 
-
-def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_high_scores, params, username, category):
-    url = "https://opentdb.com/api.php"
+def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, params, username, category):
     global stop_threads
     stop_threads = False
     # κάνει hidden το frame που έγινε η εισαγωγή των στοιχείων του παίκτη
     frame_user_data.place_forget()
-    # σταματάω οποιαδήποτε άλλη μουσική παίζει
+    # σταματαω οποιαδηποτε αλλη μουσικη παιζει
     pygame.mixer.music.stop()
-    #  αρχικοποίηση του mixer module
+    #  αρχικοποιηση του mixer module
     pygame.mixer.init()
-    #  φορτώνω τη μουσική
+    #  φορτωνω την μουσικη
     pygame.mixer.music.load("play.mp3")
-    # και του λεω ποίες φορές να παίξει το αρχείο της μουσικής
+    # και του λεω ποσες φορες να παιξει το αρχειο της μουσικης
     pygame.mixer.music.play(loops=1)
 
 
@@ -282,7 +281,7 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, fra
     ttk.Button(frame_bottom, text="End Game",
                command=lambda: [stop_countdown(),
                                 check_answers(qa, parent, frame_top, frame_bottom, frame_game_score, frame_user_data,
-                                              frame_high_scores, second, params, username, category)]).place(x=150, y=20)
+                                              frame_hi_scores, second, params, username, category)]).place(x=150, y=20)
     ttk.Button(frame_bottom, text=">",
                command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550, y=20)
     ttk.Button(frame_bottom, text="<",
