@@ -6,7 +6,7 @@ import datetime
 from PIL import Image, ImageTk, ImageSequence
 import time
 import pygame
-
+from threading import Timer
 
 def open_db_table():
     # δημιουργια της βασης και αν υπαρχει απλα την ανοιγει
@@ -207,14 +207,22 @@ def show_game_score(parent, game_score, frame_hi_scores):
         parent.place_forget()
         show_high_scores(frame_hi_scores)
     else:
-        time.sleep(3)
-        parent.place_forget()
-        show_high_scores(frame_hi_scores)
+        t = Timer(4, lambda: time_sleep(parent, frame_hi_scores), args=None, kwargs=None)
+        t.start()
 
+
+
+
+
+def time_sleep(parent, frame_hi_scores):
+    parent.place_forget()
+    show_high_scores(frame_hi_scores)
 
 
 
 counteR = 0
+
+
 def play_gif(parent, x, y):
     global counteR
 
@@ -229,7 +237,6 @@ def play_gif(parent, x, y):
         img = ImageTk.PhotoImage(img)
         lbl.config(image=img)
         counteR += 1
-        print(counteR)
 
         parent.update()
         time.sleep(0.01)
