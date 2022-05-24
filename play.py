@@ -176,7 +176,10 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
         for widgets in frame_top.winfo_children():
             widgets.destroy()
         frame_bottom.nametowidget("btn_end_game").destroy()
-
+        frame_bottom.nametowidget("btn_next").destroy()
+        frame_bottom.nametowidget("btn_prev").destroy()
+        frame_bottom.nametowidget("btn_first").destroy()
+        frame_bottom.nametowidget("btn_last").destroy()
 
 def stop_countdown():
     global stop_threads
@@ -312,13 +315,8 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, fra
     ttk.Button(frame_bottom, text="End Game", name='btn_end_game',
                command=lambda: [stop_countdown(),
                                 check_answers(qa, parent, frame_top, frame_bottom, frame_game_score,
-                                              frame_user_data,
-                                              frame_hi_scores, second, params, username, category, btn_start)]).place(x=150, y=20)
-    ttk.Button(frame_bottom, text=">",
-               command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550, y=20)
-    ttk.Button(frame_bottom, text="<",
-               command=lambda: prev_question(parent, qa, current_que, frame_top)).place(x=450, y=20)
-    ttk.Button(frame_bottom, text="<<",
-               command=lambda: first_question(parent, qa, current_que, frame_top)).place(x=350, y=20)
-    ttk.Button(frame_bottom, text=">>",
-               command=lambda: last_question(parent, qa, current_que, frame_top)).place(x=650, y=20)
+                                              frame_user_data, frame_hi_scores, second, params, username, category, btn_start)]).place(x=150, y=20)
+    ttk.Button(frame_bottom, text=">", name='btn_next', command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550, y=20)
+    ttk.Button(frame_bottom, text="<", name='btn_prev', command=lambda: prev_question(parent, qa, current_que, frame_top)).place(x=450, y=20)
+    ttk.Button(frame_bottom, text="<<", name='btn_first', command=lambda: first_question(parent, qa, current_que, frame_top)).place(x=350, y=20)
+    ttk.Button(frame_bottom, text=">>", name='btn_last', command=lambda: last_question(parent, qa, current_que, frame_top)).place(x=650, y=20)
