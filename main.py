@@ -80,7 +80,7 @@ def high_scores():
 
 def create_splash_screen():
     # εδώ δημιουργεί τη splash screen
-    splash_root = Tk()
+    splash_root = tk.Toplevel()
     splash_root.title("Splash")
     splash_width = 1024
     splash_height = 568
@@ -99,7 +99,11 @@ def create_splash_screen():
     splash_root.geometry(f"{splash_width}x{splash_height}+{center_x}+{center_y}")
     # για να μην εχει τον τιτλο
     splash_root.overrideredirect(True)
-    show_splash_screen(splash_root)
+    show_splash_screen()
+    # προσθετω την εικονα του splash screen
+    img = ImageTk.PhotoImage(Image.open("splash_screen_image.png"))
+    label = Label(splash_root, image=img)
+    label.pack()
     ## required to make window show before the program gets to the mainloop
     splash_root.update()
     # root.title("Main Window")

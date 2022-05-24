@@ -4,6 +4,7 @@ from tkinter import ttk
 import sqlite3
 import datetime
 from PIL import Image, ImageTk, ImageSequence
+from PIL import *
 import time
 import pygame
 from threading import Timer
@@ -126,18 +127,9 @@ def show_high_scores(parent):
         sqlite_connection.close()
 
 
-def show_splash_screen(parent):
+def show_splash_screen():
     #  αρχικοποιηση του mixer module
     pygame.mixer.init()
-    # splash screen labels
-    lbl_splash = ttk.Label(parent, text='THE CREATORS', font='Arial 18 bold')
-    lbl_splash.place(x=400, y=30)
-    lbl_splash2 = ttk.Label(parent, text='Αλέξανδρος Μανουσάκης', font='Arial 16 bold')
-    lbl_splash2.place(x=55, y=200)
-    lbl_splash3 = ttk.Label(parent, text='Νίκος Σεμερτζιδης', font='Arial 16 bold')
-    lbl_splash3.place(x=415, y=200)
-    lbl_splash4 = ttk.Label(parent, text='Συμεών Βουτέρος', font='Arial 16 bold')
-    lbl_splash4.place(x=725, y=200)
     #  φορτωνω την μουσικη
     pygame.mixer.music.load("splash_screen.mp3")
     # και του λεω ποσες φορες να παιξει το αρχειο της μουσικης
@@ -208,7 +200,7 @@ def show_game_score(parent, game_score, frame_hi_scores):
         parent.place_forget()
         show_high_scores(frame_hi_scores)
     else:
-        t = Timer(4, lambda: time_sleep(parent, frame_hi_scores), args=None, kwargs=None)
+        t = Timer(5, lambda: time_sleep(parent, frame_hi_scores))
         t.start()
 
 
@@ -223,7 +215,7 @@ counteR = 0
 def play_gif(parent, x, y):
     global counteR
 
-    if counteR > 63:
+    if counteR > 100:
         return
 
     img = Image.open("fireworkds5.gif")
