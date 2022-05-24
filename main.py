@@ -6,7 +6,7 @@ from high_scores import *
 from play import *
 import webbrowser  # για το github link
 
-appname = "doYouKnow?"
+appname = "didYouKnow?"
 
 
 # ------------------------- frame show/hide functions-----------------------------
