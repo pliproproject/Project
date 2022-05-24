@@ -206,11 +206,13 @@ def show_game_score(parent, game_score, frame_hi_scores, btn_start):
         t = Timer(5, lambda: time_sleep(parent, frame_hi_scores))
         t.start()
 
-    #if count > 0:
-        #lbl_end_game3.place_forget()
+    if count > 0:
+        lbl_end_game3.place_forget()
+
     global counteR
     counteR = 0
     btn_start["state"] = "NORMAL"
+
 
 
 def time_sleep(parent, frame_hi_scores):
