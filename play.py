@@ -9,12 +9,13 @@ from time import perf_counter
 from PIL import ImageTk
 import pygame
 
-#from tkinter import PhotoImage
+# from tkinter import PhotoImage
 # import requests
 
 # from get_questions import get_questions
 from high_scores import show_game_score
 from get_questions import get_questions
+from main import start_new_game
 
 time_start = 0
 game_duration = 180
@@ -33,7 +34,7 @@ def viewing_time():
 def show_time_to_answer(qa, current_que, frame_top):
     tta = StringVar()
     lbl_time_to_answer = tk.Label(frame_top, textvariable=tta, fg="black", bg="lightgray", font="Arial 12")
-    lbl_time_to_answer.place(x=125, y=30)
+    lbl_time_to_answer.place(x=125, y=20)
     # print("currentq=", current_que[0], "time to answer=", qa[current_que[0]]['time_to_answer'])
     tta.set(str(qa[current_que[0]]['time_to_answer']).zfill(6))
 
@@ -120,7 +121,8 @@ def show_question(parent, qa, current_que, frame_top):
     return
 
 
-def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, second, params, username, category):
+def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, second,
+                  params, username, category):
     global game_number
     global game_score
     global game_duration
@@ -140,7 +142,7 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
         # Μετράει τις μη απαντημένες ερωτήσεις
         if len(qa[que]['user_answer']) == 0:
             game_score[game_number]['not_answered'] += 1
-        #print(que + 1, qa[que]['question'], '-user answer=', qa[que]['user_answer'], '-time=', qa[que]['time_to_answer'])
+        # print(que + 1, qa[que]['question'], '-user answer=', qa[que]['user_answer'], '-time=', qa[que]['time_to_answer'])
         if qa[que]['correct_answer'] == qa[que]['user_answer']:
             game_score[game_number]['score'] += difficulty * qa[que]['time_to_answer']
             game_score[game_number]['correct'] += 1
@@ -162,7 +164,7 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
                               message='Θέλετε να συνεχίσετε το παιχνίδι;')
             if answer:
                 play(frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, params,
-                     username,category)
+                     username, category)
                 game_end = False
     if game_end:
         # Κάνει hidden το play_frame
@@ -171,6 +173,10 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
         show_game_score(frame_game_score, game_score, frame_hi_scores)
         game_score.clear()
         game_number = 0
+        # Καταστρέφει όλα τα widgets του top frame (Χρόνος, κατηγορία, δυσκολία κλπ)
+        for widgets in frame_top.winfo_children():
+            widgets.destroy()
+        frame_bottom.nametowidget("btn_end_game").destroy()
 
 
 def stop_countdown():
@@ -178,7 +184,8 @@ def stop_countdown():
     stop_threads = True
 
 
-def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, params, username, category):
+def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores,
+              params, username, category):
     global stop_threads
     temp = int(second.get())
     while temp > -1:
@@ -191,32 +198,49 @@ def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score,
         time.sleep(1)
         if temp == 0:
             messagebox.showinfo("Τέλος", "Η χρόνος έληξε! ")
-            check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, second, params, username, category)
+            check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores,
+                          second, params, username, category)
         if stop_threads:
             break
         # after every one sec the value of temp will be decremented by one
         temp -= 1
 
-def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, params, username, category):
+
+def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, params, username,
+         category):
     global stop_threads
     stop_threads = False
+    # Η επιλογή του παίκτη "difficulty=Easy, Category=Musical and Theater" δε φέρνει ερωτήσεις από την opentdb.
+    # Σε αυτή την περίπτωση αλλάζω τον βαθμό δυσκολίας μέχρι να φέρει ερωτήσεις.
+    while True:
+        jsondata = get_questions(url, params)
+        qa = jsondata['results']
+        if len(qa) == 0:
+            if params['difficulty'] == 'easy':
+                params['difficulty'] = 'medium'
+            if params['difficulty'] == 'medium':
+                params['difficulty'] = 'hard'
+            if params['difficulty'] == 'hard':
+                params['difficulty'] = 'medium'
+            messagebox.showwarning(title='Change selection',
+                                   message='There are no questions in the selected category and level. Difficulty is changed to ' +
+                                           params['difficulty'])
+        else:
+            break
     # κάνει hidden το frame που έγινε η εισαγωγή των στοιχείων του παίκτη
     frame_user_data.place_forget()
-    # σταματαω οποιαδηποτε αλλη μουσικη παιζει
+    # σταματάω οποιαδήποτε άλλη μουσική παίζει
     pygame.mixer.music.stop()
-    #  αρχικοποιηση του mixer module
+    #  αρχικοποίηση του mixer module
     pygame.mixer.init()
-    #  φορτωνω την μουσικη
+    #  φορτώνω τη μουσική
     pygame.mixer.music.load("play.mp3")
-    # και του λεω ποσες φορες να παιξει το αρχειο της μουσικης
+    # και του λεω ποίες φορές να παίξει το αρχείο της μουσικής
     pygame.mixer.music.play(loops=4)
 
     print("πριν πάει για τις ερωτήσεις")
     # καλεί την get_questions με παραμέτρους το url, την επιλεγμένη από τον παίχτη κατηγορία και το επίπεδο δυσκολίας
-    jsondata = get_questions(url, params)
-    qa = jsondata['results']
-    print("επιστρέφει με τις ερωτήσεις")
-    print("params=",params,"-------->",qa)
+
     parent.place(y=100, height=768 - 160, width=1024)
     second = StringVar()
     second.set("180")
@@ -224,13 +248,14 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, fra
     # lbl_time_to_answer = tk.Label(frame_top, text="00", fg="black", bg="yellow", font="Verdana 30 bold")
     # lbl_time_to_answer.place(x=10, y=30)
     # counter_label(lbl, True)
-
-    tk.Label(frame_top, font=("Arial", 12, ""), bg='lightgray', text='Time to answer:').place(x=10, y=30)
-    tk.Label(frame_top, font=("Arial", 8, ""), bg='lightgray', text='(1/100 sec)').place(x=10, y=50)
-    tk.Label(frame_top, font=("Arial", 14, ""), bg='lightgray', text='Time left:').place(x=870, y=30)
+    tk.Label(frame_top, font=("Arial", 8, ""), bg='lightgray',
+             text='Category: ' + category + ', Difficulty:' + params['difficulty']).place(x=10, y=75)
+    tk.Label(frame_top, font=("Arial", 12, ""), bg='lightgray', text='Time to answer:').place(x=10, y=20)
+    tk.Label(frame_top, font=("Arial", 8, ""), bg='lightgray', text='(1/100 sec)').place(x=10, y=40)
+    tk.Label(frame_top, font=("Arial", 14, ""), bg='lightgray', text='Time left:').place(x=870, y=20)
     # Φτιάχνω ένα label που εμφανίζει το χρόνο που έχει απομείνει
     seconds = tk.Label(frame_top, width=3, font=("Arial", 14, ""), bg='lightgray', fg='red', textvariable=second)
-    seconds.place(x=950, y=30)
+    seconds.place(x=950, y=20)
     # Καλώ τη συνάρτηση countdown που μετράει το χρόνο που απομένει μέχρι το τέλος του παιχνιδιού
     # Η συνάρτηση καλείται σε διαφορετικό thread. Αν την καλέσω στο ίδιο thread σταματάει η εκτέλεση του υπόλοιπου
     # προγράμματος μέχρι να περάσουν τα 180sec και συνεχίζει μετά.
@@ -247,12 +272,21 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, fra
     for q in qa:
         # εδώ αντικαθιστώ τα &quot; με ", το &#039; με ', το amp; με &, το &/divide με /, &lt; με <, &gt; με > στις ερωτήσεις και απαντήσεις
         q['question'] = (q['question'].replace("&lt;", "<")).replace("&gt;", ">")
-        q['question'] = (((((q['question'].replace('&quot;', '"')).replace("&#039;", "'")).replace("&amp;", "&")).replace("&ivide;", "/")).replace("&rsquo;", "'")).replace("&eacute;", "e")
+        q['question'] = (q['question'].replace("&iacute;", "E")).replace("&ndash;", "-")
+        q['question'] = (((((q['question'].replace('&quot;', '"')).replace("&#039;", "'")).replace("&amp;",
+                                                                                                   "&")).replace(
+            "&ivide;", "/")).replace("&rsquo;", "'")).replace("&eacute;", "e")
         q['correct_answer'] = (q['correct_answer'].replace("&lt;", "<")).replace("&gt;", ">")
-        q['correct_answer'] = (((((q['correct_answer'].replace('&quot;', '"')).replace("&#039;", "'")).replace("&amp;", "&")).replace("&ivide;", "/")).replace("&rsquo;", "/")).replace("&eacute;", "e")
+        q['correct_answer'] = (q['correct_answer'].replace("&iacute;", "<")).replace("&ndash;", ">")
+        q['correct_answer'] = (((((q['correct_answer'].replace('&quot;', '"')).replace("&#039;", "'")).replace("&amp;",
+                                                                                                               "&")).replace(
+            "&ivide;", "/")).replace("&rsquo;", "/")).replace("&eacute;", "e")
         for i in range(0, len(q['incorrect_answers'])):
             q['incorrect_answers'][i] = (q['incorrect_answers'][i].replace("&lt;", "<")).replace("&gt;", ">")
-            q['incorrect_answers'][i] = (((((q['incorrect_answers'][i].replace('&quot;', '"')).replace("&#039;", "'")).replace("&amp;", "&")).replace("&ivide;", "/")).replace("&rsquo;", "/")).replace("&eacute;", "e")
+            q['incorrect_answers'][i] = (q['incorrect_answers'][i].replace("&iacute;", "<")).replace("&ndash;", ">")
+            q['incorrect_answers'][i] = (((((q['incorrect_answers'][i].replace('&quot;', '"')).replace("&#039;",
+                                                                                                       "'")).replace(
+                "&amp;", "&")).replace("&ivide;", "/")).replace("&rsquo;", "/")).replace("&eacute;", "e")
         # καταχωρεί τη σωστή και τις λανθασμένες απαντήσεις κάθε ερώτησης στη λίστα answers
         # ???????
         answers = [q['correct_answer'], *q['incorrect_answers']]
@@ -276,9 +310,10 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, fra
     # Χρησιμοποιώ lambda συναρτήσεις γιατί στο button "ολοκλήρωση παιχνιδιού" θα πρέπει πρώτα να καλέσω τη
     # stop_countdown ώστε να σταματήσει το thread με τη μέτρηση του χρόνου. Στις υπόλοιπες είναι απαραίτητο επειδή
     # καλώ με πολλά ορίσματα τις συναρτήσεις στο onclick event
-    ttk.Button(frame_bottom, text="End Game",
+    ttk.Button(frame_bottom, text="End Game", name='btn_end_game',
                command=lambda: [stop_countdown(),
-                                check_answers(qa, parent, frame_top, frame_bottom, frame_game_score, frame_user_data,
+                                check_answers(qa, parent, frame_top, frame_bottom, frame_game_score,
+                                              frame_user_data,
                                               frame_hi_scores, second, params, username, category)]).place(x=150, y=20)
     ttk.Button(frame_bottom, text=">",
                command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550, y=20)
@@ -288,4 +323,3 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, fra
                command=lambda: first_question(parent, qa, current_que, frame_top)).place(x=350, y=20)
     ttk.Button(frame_bottom, text=">>",
                command=lambda: last_question(parent, qa, current_que, frame_top)).place(x=650, y=20)
-
