@@ -136,7 +136,7 @@ def show_splash_screen():
     pygame.mixer.music.play(loops=0)
 
 
-def show_game_score(parent, game_score, frame_hi_scores):
+def show_game_score(parent, game_score, frame_hi_scores, btn_start):
     # σταματαω οποιαδηποτε αλλη μουσικη παιζει
     pygame.mixer.music.stop()
     # εδω κοιταω για το ποσες φορες εχει παιξει ο παιχτης και αναλογος βγαζω το αποτελεσμα για το καθενα
@@ -181,12 +181,13 @@ def show_game_score(parent, game_score, frame_hi_scores):
     pygame.mixer.music.load("high_score.mp3")
     # και του λεω ποσες φορες να παιξει το αρχειο της μουσικης
     pygame.mixer.music.play(loops=3)
-    if count > 0:
-        # αν εκανε high score τυπωνω το αναλογο μυνημα
-        lbl_end_game3 = ttk.Label(parent, text='ΣΥΓΧΑΡΗΤΗΡΙΑ ΠΕΤΥΧΕΣ HIGH SCORE !!! ΜΠΡΑΒΟ !!!!' + "\N{trophy}" +
-                                               "\N{trophy}", font='Arial 22 bold')
-        lbl_end_game3.place(x=100, y=150)
 
+    # αν εκανε high score τυπωνω το αναλογο μυνημα
+    print(count)
+    if count > 0:
+        print("enter1")
+        lbl_end_game3 = ttk.Label(parent, text='ΣΥΓΧΑΡΗΤΗΡΙΑ ΠΕΤΥΧΕΣ HIGH SCORE !!! ΜΠΡΑΒΟ !!!!' + "\N{trophy}" + "\N{trophy}", font='Arial 22 bold')
+        lbl_end_game3.place(x=100, y=150)
     # και εδω τυπωνω το score του παιχτη
     lbl_end_game = ttk.Label(parent, text='Game Score', font='Arial 20 bold')
     lbl_end_game.place(x=420, y=30)
@@ -195,13 +196,21 @@ def show_game_score(parent, game_score, frame_hi_scores):
     # εδω τα εισαγω στην βαση
     insert_high_score(game_score[0]['name'], game_score[0]['category'], game_score[0]['difficulty'], game_number,
                       time_is, correct_is, wrong_is, score_is)
+    print(count)
     if count > 0:
+        print("enter2")
         play_gif(parent, 250, 200)
         parent.place_forget()
         show_high_scores(frame_hi_scores)
-    else:
+    elif count == 0:
         t = Timer(5, lambda: time_sleep(parent, frame_hi_scores))
         t.start()
+
+    #if count > 0:
+        #lbl_end_game3.place_forget()
+    global counteR
+    counteR = 0
+    btn_start["state"] = "NORMAL"
 
 
 def time_sleep(parent, frame_hi_scores):
