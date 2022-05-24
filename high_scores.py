@@ -183,10 +183,9 @@ def show_game_score(parent, game_score, frame_hi_scores, btn_start):
     pygame.mixer.music.play(loops=3)
 
     # αν εκανε high score τυπωνω το αναλογο μυνημα
-    print(count)
     if count > 0:
-        print("enter1")
-        lbl_end_game3 = ttk.Label(parent, text='ΣΥΓΧΑΡΗΤΗΡΙΑ ΠΕΤΥΧΕΣ HIGH SCORE !!! ΜΠΡΑΒΟ !!!!' + "\N{trophy}" + "\N{trophy}", font='Arial 22 bold')
+        lbl_end_game3 = ttk.Label(parent, text='ΣΥΓΧΑΡΗΤΗΡΙΑ ΠΕΤΥΧΕΣ HIGH SCORE !!! ΜΠΡΑΒΟ !!!!' + "\N{trophy}" +
+                                               "\N{trophy}", font='Arial 22 bold')
         lbl_end_game3.place(x=100, y=150)
     # και εδω τυπωνω το score του παιχτη
     lbl_end_game = ttk.Label(parent, text='Game Score', font='Arial 20 bold')
@@ -196,26 +195,30 @@ def show_game_score(parent, game_score, frame_hi_scores, btn_start):
     # εδω τα εισαγω στην βαση
     insert_high_score(game_score[0]['name'], game_score[0]['category'], game_score[0]['difficulty'], game_number,
                       time_is, correct_is, wrong_is, score_is)
-    print(count)
+
     if count > 0:
-        print("enter2")
         play_gif(parent, 250, 200)
+        #  βγαινω απο το frame του game score και παω στα high scores
         parent.place_forget()
         show_high_scores(frame_hi_scores)
     elif count == 0:
+        #  μετα απο 5 δευτερολεπτα  εκτελειται η συναρτηση
         t = Timer(5, lambda: time_sleep(parent, frame_hi_scores))
         t.start()
 
+    # καταστρεφω το label γιατι αν παιξει ο χρηστης και κανει high score και μετα δεν κανει παραμενε το label
     if count > 0:
         lbl_end_game3.place_forget()
 
+    #  μηδενιζω τον counter του time_sleep() γιατι ειναι αναδρομη και αλλιως θα εβγαινε κατευθειαν απο την συναρτηση
+    #  αν εμπαινε δευτερη φορα στην συναρτηση
     global counteR
     counteR = 0
     btn_start["state"] = "NORMAL"
 
 
-
 def time_sleep(parent, frame_hi_scores):
+    #  βγαινω απο το frame του game score και παω στα high scores
     parent.place_forget()
     show_high_scores(frame_hi_scores)
 
@@ -226,21 +229,31 @@ counteR = 0
 def play_gif(parent, x, y):
     global counteR
 
+    # τερματισμος της αναδρομης
     if counteR > 100:
         return
 
+    # ανοιγω την gif εικονα
     img = Image.open("fireworkds5.gif")
 
+    # δημιουργω το label που θα μπει η εικονα
     lbl = Label(parent)
+    # τοποθετω το label στο χωρο του frame
     lbl.place(x=x, y=y)
+    #  και εδω σπαω την εικονα σε πολλες για να δωσω την αισθηση της κινησης προβαλοντας τες την μια μετα της αλλη
     for img in ImageSequence.Iterator(img):
         img = ImageTk.PhotoImage(img)
+        # παιρναω την εικονα στο label
         lbl.config(image=img)
         counteR += 1
 
+        #  και κανω update το frame για να φανει η επομενη εικονα
         parent.update()
+        #  χρονος αναμονης για να παει στην επομενη εικονα
         time.sleep(0.01)
+        #  το frame αμεσως μετα ξανα καλει την αναδρομικη συναρτηση
     parent.after(0, play_gif(parent, x, y))
 
 
+# δημιουργεια η ανοιγμα της βασης
 open_db_table()
