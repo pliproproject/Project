@@ -7,7 +7,7 @@ username = ""
 level = ""
 
 
-def get_user_data(parent, frame_play, frame_top, frame_bottom, frame_game_score, frame_hi_scores):
+def get_user_data(parent, frame_play, frame_top, frame_bottom, frame_game_score, frame_hi_scores, btn_start):
     # σταματαω οποιαδηποτε αλλη μουσικη παιζει
     pygame.mixer.music.stop()
     #  αρχικοποιηση του mixer module
@@ -118,7 +118,7 @@ def get_user_data(parent, frame_play, frame_top, frame_bottom, frame_game_score,
             )
         # καλεί την play για να αρχίσει το παιχνίδι
         category = cat.get()
-        play(frame_play, frame_top, frame_bottom, frame_game_score, parent, frame_hi_scores, params, username, category)
+        play(frame_play, frame_top, frame_bottom, frame_game_score, parent, frame_hi_scores, params, username, category, btn_start)
 
     btn3 = Button(parent, text="Continue", command=clicked3)
     btn3.place(x=350, y=200)

@@ -57,7 +57,7 @@ def start_new_game():
     btn_start["state"] = DISABLED
     frame_hi_scores_hide()
     frame_user_data_show()
-    get_user_data(frame_user_data, frame_play, frame_top, frame_bottom, frame_game_score, frame_hi_scores)
+    get_user_data(frame_user_data, frame_play, frame_top, frame_bottom, frame_game_score, frame_hi_scores, btn_start)
 
 
 # η παρακάτω μάλλον δε χρειάζεται πια

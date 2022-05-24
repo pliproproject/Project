@@ -12,10 +12,9 @@ import pygame
 # from tkinter import PhotoImage
 # import requests
 
-# from get_questions import get_questions
 from high_scores import show_game_score
 from get_questions import get_questions
-from main import start_new_game
+# from main import start_new_game
 
 time_start = 0
 game_duration = 180
@@ -122,7 +121,7 @@ def show_question(parent, qa, current_que, frame_top):
 
 
 def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, second,
-                  params, username, category):
+                  params, username, category, btn_start):
     global game_number
     global game_score
     global game_duration
@@ -164,13 +163,13 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
                               message='Θέλετε να συνεχίσετε το παιχνίδι;')
             if answer:
                 play(frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, params,
-                     username, category)
+                     username, category, btn_start)
                 game_end = False
     if game_end:
         # Κάνει hidden το play_frame
         frame_play.place_forget()
         frame_game_score.place(y=100, height=768 - 160, width=1024)
-        show_game_score(frame_game_score, game_score, frame_hi_scores)
+        show_game_score(frame_game_score, game_score, frame_hi_scores, btn_start)
         game_score.clear()
         game_number = 0
         # Καταστρέφει όλα τα widgets του top frame (Χρόνος, κατηγορία, δυσκολία κλπ)
@@ -185,7 +184,7 @@ def stop_countdown():
 
 
 def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores,
-              params, username, category):
+              params, username, category, btn_start):
     global stop_threads
     temp = int(second.get())
     while temp > -1:
@@ -199,7 +198,7 @@ def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score,
         if temp == 0:
             messagebox.showinfo("Τέλος", "Η χρόνος έληξε! ")
             check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores,
-                          second, params, username, category)
+                          second, params, username, category, btn_start)
         if stop_threads:
             break
         # after every one sec the value of temp will be decremented by one
@@ -207,7 +206,7 @@ def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score,
 
 
 def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, params, username,
-         category):
+         category, btn_start):
     global stop_threads
     stop_threads = False
     # Η επιλογή του παίκτη "difficulty=Easy, Category=Musical and Theater" δε φέρνει ερωτήσεις από την opentdb.
@@ -261,7 +260,7 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, fra
     # προγράμματος μέχρι να περάσουν τα 180sec και συνεχίζει μετά.
     t = threading.Thread(
         target=lambda: countdown(second, qa, parent, frame_top, frame_bottom, frame_game_score, frame_user_data,
-                                 frame_hi_scores, params, username, category))
+                                 frame_hi_scores, params, username, category, btn_start))
     t.daemon = True
     t.start()
 
@@ -314,7 +313,7 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, fra
                command=lambda: [stop_countdown(),
                                 check_answers(qa, parent, frame_top, frame_bottom, frame_game_score,
                                               frame_user_data,
-                                              frame_hi_scores, second, params, username, category)]).place(x=150, y=20)
+                                              frame_hi_scores, second, params, username, category, btn_start)]).place(x=150, y=20)
     ttk.Button(frame_bottom, text=">",
                command=lambda: next_question(parent, qa, current_que, frame_top)).place(x=550, y=20)
     ttk.Button(frame_bottom, text="<",
