@@ -205,7 +205,7 @@ def play(parent, frame_top, frame_bottom, frame_game_score, frame_user_data, fra
     stop_threads = False
     # Καλεί την get_questions με παραμέτρους το url, την επιλεγμένη από τον παίχτη κατηγορία και το επίπεδο δυσκολίας
     # Η επιλογή του παίκτη "difficulty=Easy, Category=Musical and Theater" δε φέρνει ερωτήσεις από την opentdb.
-    # Σε αυτή την περίπτωση αλλάζω τον βαθμό δυσκολίας μέχρι να φέρει ερωτήσεις.
+    # Σε αυτή την περίπτωση αλλάζω τον βαθμό δυσκολίας μέχρι να φέρει ερωτήσεις
     while True:
         jsondata = get_questions(url, params)
         qa = jsondata['results']
