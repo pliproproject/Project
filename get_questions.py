@@ -8,6 +8,4 @@ def get_questions(url, params):
     data = resp.json()
 
     print(data['results'])
-    #  play(qa, frame_play, frame_top, frame_bottom, frame_game_score)
-    #  return data['results']
     return data
