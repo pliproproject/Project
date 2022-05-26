@@ -150,31 +150,26 @@ if __name__ == '__main__':
     frame_bottom.place(y=708, height=60, width=window_width)
     # Δημιουργεί το about frame για να είναι έτοιμο
     frame_about = tk.Frame(root, bg='white')
-    img = ImageTk.PhotoImage(Image.open("about.png"))
-    label = Label(frame_about, image=img)
-    label.pack()
-    githublink = Label(frame_about, text="github link", fg="blue", bg="white", cursor="hand2")
-    githublink.place(x=20, y=440)
-    githublink.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/pliproproject/Project"))
+    aboutimg = ImageTk.PhotoImage(Image.open("about.png"))
+    lbl_aboutimg = Label(frame_about, image=aboutimg)
+    lbl_aboutimg.pack()
+    lbl_githublink = Label(frame_about, text="github link", fg="blue", bg="white", cursor="hand2")
+    lbl_githublink.place(x=35, y=440)
+    lbl_githublink.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/pliproproject/Project"))
+    # Εικονίδιο GitHub
+    githubimg = ImageTk.PhotoImage(Image.open("GitHub-Mark.png"))
+    lbl_GitHubImg = Label(frame_about, image = githubimg,borderwidth=0, cursor="hand2")
+    lbl_GitHubImg.pack(padx=0, side=tk.LEFT)
+    lbl_GitHubImg.bind("<Button-1>", lambda e: webbrowser.open_new("https://github.com/pliproproject/Project"))
     btn_exit_about = ttk.Button(frame_about, text='OK', command=lambda: frame_about.place_forget())
-    btn_exit_about.place(x=580, y=440)
+    btn_exit_about.place(x=570, y=440)
 
-    # Έχω βάλει προς το παρόν buttons ια να κάνουμε τις εναλλαγές από τη μια κατάσταση στην άλλη κάποια από αυτά θα
-    # φύγουν. Για παράδειγμα, από τη splash screen θα φεύγει μετά από κάποια δευτερόλεπτα ή μετά από click
     # exit button
     btn_exit = ttk.Button(frame_bottom, text='Exit', command=root.destroy)
     btn_exit.place(x=window_width - 100, y=20)
     # start new game button (ask username etc.)
     btn_start = ttk.Button(frame_bottom, text="Start New Game", command=start_new_game, state=NORMAL)
     btn_start.place(x=30, y=20)
-
-    # game end-score button
-    # btn_end_game = ttk.Button(frame_bottom, text="(4. End Game)", command=end_game)
-    # btn_end_game.place(x=250, y=10)
-
-    # Hi-score button
-    #btn_hi_scores2 = ttk.Button(frame_bottom, text="(5. hi scores)", command=high_scores)
-    #btn_hi_scores2.place(x=250, y=30)
 
     btn_about = ttk.Button(frame_bottom, text="About", command=lambda: show_about_frame())
     btn_about.place(x=800, y=20)
