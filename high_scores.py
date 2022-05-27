@@ -41,7 +41,7 @@ def open_db_table():
 def insert_high_score(player, category, difficulty, times_he_played, time, correct_answers, wrong_answers, score):
     # εδω τραβαω την σημερινη ημερομηνια αυτοματα
     date = datetime.date.today().strftime('%d/%m/%Y')
-    
+
     # ανοιγω την βαση και προσθετο τα στοιχεια που πρεπει στο table
     sqlite_connection = sqlite3.connect('Trivia_game.db')
     c = sqlite_connection.cursor()
