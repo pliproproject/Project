@@ -10,38 +10,6 @@ appname = "didYouKnow?"
 
 
 # ------------------------- frame show/hide functions-----------------------------
-def frame_hi_scores_show():
-    show_high_scores(frame_hi_scores)
-
-
-def frame_hi_scores_hide():
-    frame_hi_scores.place_forget()
-
-
-def frame_user_data_show():
-    global window_height, window_width
-    frame_user_data.place(y=100, height=window_height - 160, width=window_width)
-
-
-def frame_user_data_hide():
-    frame_user_data.place_forget()
-
-
-def frame_play_show():
-    frame_play.place(y=100, height=window_height - 160, width=window_width)
-
-
-def frame_play_hide():
-    frame_play.place_forget()
-
-
-def frame_game_score_show():
-    frame_game_score.place(y=100, height=window_height - 160, width=window_width)
-
-
-def frame_game_score_hide():
-    frame_game_score.place_forget()
-
 
 def show_about_frame():
     frame_about.place(x=183, y=100, height=470, width=657)
@@ -55,27 +23,9 @@ def exit_splash():
 
 def start_new_game():
     btn_start["state"] = DISABLED
-    frame_hi_scores_hide()
-    frame_user_data_show()
+    frame_hi_scores.place_forget()
+    frame_user_data.place(y=100, height=window_height - 160, width=window_width)
     get_user_data(frame_user_data, frame_play, frame_top, frame_bottom, frame_game_score, frame_hi_scores, btn_start)
-
-
-# η παρακάτω μάλλον δε χρειάζεται πια
-def play_game():
-    frame_user_data_hide()
-    frame_play_show()
-
-
-def end_game():
-    frame_play_hide()
-    frame_game_score_show()
-
-
-def high_scores():
-    btn_start["state"] = NORMAL
-    frame_user_data_hide()
-    frame_game_score_hide()
-    frame_hi_scores_show()
 
 
 def create_splash_screen():
@@ -106,7 +56,7 @@ def create_splash_screen():
     label.pack()
     ## required to make window show before the program gets to the mainloop
     splash_root.update()
-    # root.title("Main Window")
+
     ## μετά από 5 secs τη σκοτώνει
     time.sleep(5)
     ## σκοτώνει τη splash
@@ -140,7 +90,10 @@ if __name__ == '__main__':
     create_splash_screen()
     # show window again
     root.deiconify()
+    # προσθηκη fav icon
     root.iconbitmap('favicon.ico')
+
+    # δημιουργια των απαραιτητων frames
     frame_top = tk.Frame(root, bg='lightgray')
     frame_top.place(y=1, height=100, width=window_width)
     frame_hi_scores = tk.Frame(root, bg='gainsboro')

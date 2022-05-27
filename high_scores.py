@@ -66,9 +66,13 @@ def show_high_scores(parent):
     global CreateStop_, table
     if CreateStop_:
         CreateStop_ = False
-        # δημιουργω το tree view για εμφανιση των high_scores
-        parent.pack(side=tk.LEFT, padx=90)
 
+        # προσθηκη εικονας top 10 high scores στο frame
+        top_ten_imag = ImageTk.PhotoImage(Image.open("top_ten_high_score1.png"))
+        lbl_top_ten = Label(parent, image=top_ten_imag, borderwidth=0)
+        lbl_top_ten.image = top_ten_imag
+        lbl_top_ten.place(x=195, y=50)
+        # δημιουργω το tree view για εμφανιση των high_scores
         table = ttk.Treeview(parent, columns=(1, 2, 3, 4, 5, 6, 7, 8, 9), show="headings", height="10")
         table.column("1", anchor=CENTER, width="80", minwidth="60")
         table.column("2", anchor=CENTER, width="80", minwidth="60")
@@ -90,7 +94,7 @@ def show_high_scores(parent):
         table.heading(8, text="Wrong Answers")
         table.heading(9, text="Final Score")
 
-        table.pack()
+        table.pack(side=tk.LEFT, padx=90)
         # εδω ανοιγω την βαση και τραβαω τα 10 πρωτα σε φθινουσα σειρα high scores
         sqlite_connection = sqlite3.connect('Trivia_game.db')
         c = sqlite_connection.cursor()
@@ -184,13 +188,20 @@ def show_game_score(parent, game_score, frame_hi_scores, btn_start):
     # αν εκανε high score τυπωνω το αναλογο μυνημα
     if count > 0:
         lbl_end_game3 = ttk.Label(parent, text='CONGRATULATIONS ACHIEVEMENTS HIGH SCORE !!! WELL DONE !!!!' + "\N{trophy}" +
-                                               "\N{trophy}", font='Arial 22 bold')
-        lbl_end_game3.place(x=100, y=150)
+                                               "\N{trophy}", font='Arial 20 bold')
+        lbl_end_game3.place(x=15, y=150)
     # και εδω τυπωνω το score του παιχτη
     lbl_end_game = ttk.Label(parent, text='Game Score', font='Arial 20 bold')
-    lbl_end_game.place(x=420, y=30)
+    lbl_end_game.place(x=390, y=30)
     lbl_end_game2 = ttk.Label(parent, text='Your Score is' + " " + str(score_is) + " !!!!!", font='Arial 16 bold')
-    lbl_end_game2.place(x=400, y=100)
+    lbl_end_game2.place(x=370, y=100)
+    # προσθηκη εικονας στο frame game score
+    if count == 0:
+        game_score_imag = ImageTk.PhotoImage(Image.open("frame_game_score_image2.png"))
+        lbl_game_score = Label(parent, image=game_score_imag, borderwidth=0)
+        lbl_game_score.image = game_score_imag
+        lbl_game_score.place(x=270, y=200)
+
     # εδω τα εισαγω στην βαση
     insert_high_score(game_score[0]['name'], game_score[0]['category'], game_score[0]['difficulty'], game_number,
                       time_is, correct_is, wrong_is, score_is)
@@ -199,6 +210,7 @@ def show_game_score(parent, game_score, frame_hi_scores, btn_start):
         play_gif(parent, 250, 200)
         #  βγαινω απο το frame του game score και παω στα high scores
         parent.place_forget()
+        frame_hi_scores.place(y=100, height=768 - 160, width=1024)
         show_high_scores(frame_hi_scores)
     elif count == 0:
         #  μετα απο 5 δευτερολεπτα  εκτελειται η συναρτηση
@@ -208,6 +220,10 @@ def show_game_score(parent, game_score, frame_hi_scores, btn_start):
     # καταστρεφω το label γιατι αν παιξει ο χρηστης και κανει high score και μετα δεν κανει παραμενε το label
     if count > 0:
         lbl_end_game3.place_forget()
+    elif count == 0:
+        #  μετα απο 5 δευτερολεπτα  εκτελειται η συναρτηση
+        t = Timer(5, lambda: hide_image(lbl_game_score))
+        t.start()
 
     #  μηδενιζω τον counter του time_sleep() γιατι ειναι αναδρομη και αλλιως θα εβγαινε κατευθειαν απο την συναρτηση
     #  αν εμπαινε δευτερη φορα στην συναρτηση
@@ -216,9 +232,15 @@ def show_game_score(parent, game_score, frame_hi_scores, btn_start):
     btn_start["state"] = "NORMAL"
 
 
+def hide_image(lbl_game_score):
+    # καταστρεφω το label γιατι αν παιξει ο χρηστης και δεν κανει high score και μετα κανει παραμενε το label
+    lbl_game_score.place_forget()
+
+
 def time_sleep(parent, frame_hi_scores):
     #  βγαινω απο το frame του game score και παω στα high scores
     parent.place_forget()
+    frame_hi_scores.place(y=100, height=768 - 160, width=1024)
     show_high_scores(frame_hi_scores)
 
 
