@@ -49,11 +49,8 @@ def create_splash_screen():
     splash_root.geometry(f"{splash_width}x{splash_height}+{center_x}+{center_y}")
     # για να μην εχει τον τιτλο
     splash_root.overrideredirect(True)
-    show_splash_screen()
-    # προσθετω την εικονα του splash screen
-    img = ImageTk.PhotoImage(Image.open("splash_screen_image.png"))
-    label = Label(splash_root, image=img)
-    label.pack()
+
+    show_splash_screen(splash_root)
     ## required to make window show before the program gets to the mainloop
     splash_root.update()
 

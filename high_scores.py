@@ -41,6 +41,7 @@ def open_db_table():
 def insert_high_score(player, category, difficulty, times_he_played, time, correct_answers, wrong_answers, score):
     # εδω τραβαω την σημερινη ημερομηνια αυτοματα
     date = datetime.date.today().strftime('%d/%m/%Y')
+    
     # ανοιγω την βαση και προσθετο τα στοιχεια που πρεπει στο table
     sqlite_connection = sqlite3.connect('Trivia_game.db')
     c = sqlite_connection.cursor()
@@ -72,6 +73,7 @@ def show_high_scores(parent):
         lbl_top_ten = Label(parent, image=top_ten_imag, borderwidth=0)
         lbl_top_ten.image = top_ten_imag
         lbl_top_ten.place(x=195, y=50)
+
         # δημιουργω το tree view για εμφανιση των high_scores
         table = ttk.Treeview(parent, columns=(1, 2, 3, 4, 5, 6, 7, 8, 9), show="headings", height="10")
         table.column("1", anchor=CENTER, width="80", minwidth="60")
@@ -130,11 +132,18 @@ def show_high_scores(parent):
         sqlite_connection.close()
 
 
-def show_splash_screen():
+def show_splash_screen(parent):
     #  αρχικοποιηση του mixer module
     pygame.mixer.init()
     #  φορτωνω την μουσικη
     pygame.mixer.music.load("splash_screen.mp3")
+
+    # προσθετω την εικονα του splash screen
+    splash_root_imag = ImageTk.PhotoImage(Image.open("splash_screen_image.png"))
+    lbl_splash_root = Label(parent, image=splash_root_imag, borderwidth=0)
+    lbl_splash_root.image = splash_root_imag
+    lbl_splash_root.pack()
+
     # και του λεω ποσες φορες να παιξει το αρχειο της μουσικης
     pygame.mixer.music.play(loops=0)
 
@@ -190,11 +199,13 @@ def show_game_score(parent, game_score, frame_hi_scores, btn_start):
         lbl_end_game3 = ttk.Label(parent, text='CONGRATULATIONS ACHIEVEMENTS HIGH SCORE !!! WELL DONE !!!!' + "\N{trophy}" +
                                                "\N{trophy}", font='Arial 20 bold')
         lbl_end_game3.place(x=15, y=150)
+
     # και εδω τυπωνω το score του παιχτη
     lbl_end_game = ttk.Label(parent, text='Game Score', font='Arial 20 bold')
     lbl_end_game.place(x=390, y=30)
     lbl_end_game2 = ttk.Label(parent, text='Your Score is' + " " + str(score_is) + " !!!!!", font='Arial 16 bold')
     lbl_end_game2.place(x=370, y=100)
+
     # προσθηκη εικονας στο frame game score
     if count == 0:
         game_score_imag = ImageTk.PhotoImage(Image.open("frame_game_score_image2.png"))
