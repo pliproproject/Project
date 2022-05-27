@@ -4,7 +4,6 @@ from tkinter import ttk
 import sqlite3
 import datetime
 from PIL import Image, ImageTk, ImageSequence
-from PIL import *
 import time
 import pygame
 from threading import Timer
@@ -184,7 +183,7 @@ def show_game_score(parent, game_score, frame_hi_scores, btn_start):
 
     # αν εκανε high score τυπωνω το αναλογο μυνημα
     if count > 0:
-        lbl_end_game3 = ttk.Label(parent, text='ΣΥΓΧΑΡΗΤΗΡΙΑ ΠΕΤΥΧΕΣ HIGH SCORE !!! ΜΠΡΑΒΟ !!!!' + "\N{trophy}" +
+        lbl_end_game3 = ttk.Label(parent, text='CONGRATULATIONS ACHIEVEMENTS HIGH SCORE !!! WELL DONE !!!!' + "\N{trophy}" +
                                                "\N{trophy}", font='Arial 22 bold')
         lbl_end_game3.place(x=100, y=150)
     # και εδω τυπωνω το score του παιχτη

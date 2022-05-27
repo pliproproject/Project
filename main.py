@@ -118,6 +118,7 @@ if __name__ == '__main__':
     # create main form
     root = tk.Tk()
     root.title(appname)
+    root.iconbitmap('favicon.ico')
     window_width = 1024
     window_height = 768
     min_width = 200
