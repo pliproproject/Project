@@ -118,7 +118,7 @@ if __name__ == '__main__':
     # create main form
     root = tk.Tk()
     root.title(appname)
-    root.iconbitmap('favicon.ico')
+
     window_width = 1024
     window_height = 768
     min_width = 200
@@ -140,7 +140,7 @@ if __name__ == '__main__':
     create_splash_screen()
     # show window again
     root.deiconify()
-
+    root.iconbitmap('favicon.ico')
     frame_top = tk.Frame(root, bg='lightgray')
     frame_top.place(y=1, height=100, width=window_width)
     frame_hi_scores = tk.Frame(root, bg='gainsboro')
