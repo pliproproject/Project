@@ -1,8 +1,13 @@
 import tkinter as tk
+# The Tkinter StringVar helps you manage the value of a widget such as a Label or Entry more effectively.
 from tkinter import ttk, StringVar
+# The tkinter.messagebox module provides a template base class as well as a variety of convenience methods for
+# commonly used configurations.
 from tkinter import messagebox
 from tkinter.messagebox import askyesno
+# This module implements pseudo-random number generators for various distributions.
 import random
+# This module provides various time-related functions.
 import time
 import threading
 from time import perf_counter
@@ -123,6 +128,7 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
     score = 0
     difficulty = 1
     not_answered = 1
+    # Ορίζω ένα λεξικό το οποίο θα περιέχει όλα τα αποτελέσματα του παιχνιδιού
     gs = {'name': '', 'category': '', 'difficulty': 0, 'score': 0, 'correct': 0, 'wrong': 0, 'not_answered': 0,
           'time': 0}
     game_score.append(gs)
@@ -131,15 +137,18 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
     game_score[game_number]['difficulty'] = params['difficulty']
     game_score[game_number]['category'] = category
     for que in range(0, len(qa)):
-        # Μετράει τις μην απαντημένες ερωτήσεις
+        # Μετράει τις μη απαντημένες ερωτήσεις
         if len(qa[que]['user_answer']) == 0:
             game_score[game_number]['not_answered'] += 1
+        # τις σωστές και τις λάθος
         if qa[que]['correct_answer'] == qa[que]['user_answer']:
+            # αν η απάντηση είναι σωστή, προσθέτει στο score το γινόμενο: βαθμός Δυσκολίας * χρόνος απάντησης
+            # βέβαια, περίμενε κανείς ότι ο χρόνος απάντησης θα ήταν αντιστρόφως ανάλογος της βαθμολογίας
             game_score[game_number]['score'] += difficulty * qa[que]['time_to_answer']
             game_score[game_number]['correct'] += 1
         else:
             game_score[game_number]['wrong'] += 1
-    # Αν ο υπολειπόμενος χρόνος είναι > 0 θα πρέπει να ελέγξει αν έχει απαντήσει τουλάχιστον 6 ερωτήσεις τις 2
+    # Αν ο υπολειπόμενος χρόνος είναι > 0 θα πρέπει να ελέγξει αν έχει απαντήσει τουλάχιστον 6 ερωτήσεις τις 2 τελ. φορές
     # Αν ολοκλήρωσε το παιχνίδι εντός του χρόνου
     game_end = True
     if game_score[game_number]['time'] < game_duration:
@@ -150,13 +159,16 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
             game_number += 1
             answer = askyesno(title='Επόμενο set ερωτήσεων',
                               message='Θέλετε να συνεχίσετε το παιχνίδι;')
+            # αν επιλέξει να παίξει ένα επόμενο set, καλείται η play και επαναλαμβάνεται όλη η εκτέλεση
             if answer:
                 play(frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, params,
                      username, category, btn_start)
                 game_end = False
+    # αν επιλέξει να μη συνεχίσει με επόμενο set
     if game_end:
         # Κάνει hidden το play_frame
         frame_play.place_forget()
+        # και εμφανίζει το frame για να την εμφάνιση της βαθμολογίας
         frame_game_score.place(y=100, height=768 - 160, width=1024)
         show_game_score(frame_game_score, game_score, frame_hi_scores, btn_start)
         game_score.clear()
@@ -187,6 +199,8 @@ def countdown(second, qa, frame_play, frame_top, frame_bottom, frame_game_score,
         secs = temp
         second.set("{0:3d}".format(secs))
         time.sleep(1)
+        # Αν τελειώσει ο χρόνος των 180sec, καλείται η check_answer για να γίνει ο έλεγχος του score και ο
+        # υπολογισμός της βαθμολογίας
         if temp == 0:
             messagebox.showinfo("Τέλος", "Η χρόνος έληξε! ")
             check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores,
