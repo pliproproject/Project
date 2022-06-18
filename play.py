@@ -157,8 +157,8 @@ def check_answers(qa, frame_play, frame_top, frame_bottom, frame_game_score, fra
         if (game_number < 2) or (game_number >= 2 and game_score[game_number - 1]['not_answered'] < 3
                                  and game_score[game_number - 2]['not_answered'] < 3):
             game_number += 1
-            answer = askyesno(title='Επόμενο set ερωτήσεων',
-                              message='Θέλετε να συνεχίσετε το παιχνίδι;')
+            answer = askyesno(title='Next set of Questions',
+                              message='Do you want to continue the game with a new set of questions?')
             # αν επιλέξει να παίξει ένα επόμενο set, καλείται η play και επαναλαμβάνεται όλη η εκτέλεση
             if answer:
                 play(frame_play, frame_top, frame_bottom, frame_game_score, frame_user_data, frame_hi_scores, params,
